@@ -15,42 +15,42 @@ for file in $linkables ; do
     fi
 done
 
-echo -e "\n\ninstalling to ~/.config"
-echo "=============================="
-if [ ! -d $HOME/.config ]; then
-    echo "Creating ~/.config"
-    mkdir -p $HOME/.config
-fi
-# configs=$( find -path "$DOTFILES/config.symlink" -maxdepth 1 )
-for config in $DOTFILES/config/*; do
-    target=$HOME/.config/$( basename $config )
-    if [ -e $target ]; then
-        echo "~${target#$HOME} already exists... Skipping."
-    else
-        echo "Creating symlink for $config"
-        ln -s $config $target
-    fi
-done
-
-# create vim symlinks
-# As I have moved off of vim as my full time editor in favor of neovim,
-# I feel it doesn't make sense to leave my vimrc intact in the dotfiles repo
-# as it is not really being actively maintained. However, I would still
-# like to configure vim, so lets symlink ~/.vimrc and ~/.vim over to their
-# neovim equivalent.
-
 echo -e "\n\nCreating vim symlinks"
 echo "=============================="
+ln -s $DOTFILES/vim ~/.vim
 
-typeset -A vimfiles
-vimfiles[~/.vim]=$DOTFILES/config/nvim
-vimfiles[~/.vimrc]=$DOTFILES/config/nvim/init.vim
 
-for file in "${!vimfiles[@]}"; do
-    if [ -e ${file} ]; then
-        echo "${file} already exists... skipping"
-    else
-        echo "Creating symlink for $file"
-        ln -s $vimfiles[$file] $file
+install_zsh () {
+# Test to see if zshell is installed.  If it is:
+if [ -f /bin/zsh -o -f /usr/bin/zsh ]; then
+    # Clone my oh-my-zsh repository from GitHub only if it isn't already present
+    if [[ ! -d $dir/oh-my-zsh/ ]]; then
+        git clone http://github.com/robbyrussell/oh-my-zsh.git
     fi
-done
+    # Set the default shell to zsh if it isn't currently set to zsh
+    if [[ ! $(echo $SHELL) == $(which zsh) ]]; then
+        chsh -s $(which zsh)
+    fi
+else
+    # If zsh isn't installed, get the platform of the current machine
+    platform=$(uname);
+    # If the platform is Linux, try an apt-get to install zsh and then recurse
+    if [[ $platform == 'Linux' ]]; then
+        if [[ -f /etc/redhat-release ]]; then
+            sudo yum install zsh
+            install_zsh
+        fi
+        if [[ -f /etc/debian_version ]]; then
+            sudo apt-get install zsh
+            install_zsh
+        fi
+    # If the platform is OS X, tell the user to install zsh :)
+    elif [[ $platform == 'Darwin' ]]; then
+        echo "Please install zsh, then re-run this script!"
+        exit
+    fi
+fi
+}
+
+install_zsh
+

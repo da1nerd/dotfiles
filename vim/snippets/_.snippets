@@ -3,16 +3,16 @@
 # (c) holds no legal value ;)
 snippet c)
 	Copyright `&enc[:2] == "utf" ? "©" : "(c)"` `strftime("%Y")` ${1:`g:snips_author`}. All Rights Reserved.${2}
-snippet date
-	`strftime("%Y-%m-%d")`
-snippet ddate
-	`strftime("%B %d, %Y")`
+#snippet date
+#	`strftime("%Y-%m-%d")`
+#snippet ddate
+#	`strftime("%B %d, %Y")`
 snippet time
 	`strftime("%H:%M")`
 snippet datetime
 	`strftime("%Y-%m-%d %H:%M")`
-snippet rref
-	refs:#`git rev-parse --abrev-ref HEAD  | sed 's/ticket-//'`
+#snippet rref
+#	refs:#`git rev-parse --abrev-ref HEAD  | sed 's/ticket-//'`
 snippet lorem
 	Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 snippet GPL2
@@ -216,28 +216,3 @@ snippet APACHE
 	limitations under the License.
 
 	${3}
-snippet BEERWARE
-	${2:one line to give the program's name and a brief description}
-	Copyright `strftime("%Y")` ${3:copyright holder}
-
-	Licensed under the "THE BEER-WARE LICENSE" (Revision 42):
-	${1:`g:snips_author`} wrote this file. As long as you retain this notice you
-	can do whatever you want with this stuff. If we meet some day, and you think
-	this stuff is worth it, you can buy me a beer or coffee in return
-
-	${4}
-
-snippet WTFPL
-			DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
-					Version 2, December 2004
-
-	Copyright `strftime("%Y")` ${1:copyright holder}
-
-	Everyone is permitted to copy and distribute verbatim or modified
-	copies of this license document, and changing it is allowed as long
-	as the name is changed.
-
-			DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
-	TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
-
-	 0. You just DO WHAT THE FUCK YOU WANT TO.

@@ -8,9 +8,12 @@ export REPORTTIME=10
 
 # define the code directory
 # This is where my code exists and where I want the `c` autocomplete to work from exclusively
-if [[ -d ~/code ]]; then
-    export CODE_DIR=~/code
+if [[ -d ~/git ]]; then
+    export CODE_DIR=~/git
 fi
+
+# remap caps log to ctrl
+setxkbmap -option ctrl:nocaps
 
 # source all .zsh files inside of the zsh/ directory
 for config ($ZSH/**/*.zsh) source $config
@@ -19,14 +22,13 @@ if [[ -a ~/.localrc ]]; then
     source ~/.localrc
 fi
 
-
 # initialize autocomplete
 autoload -U compinit
 compinit
 
 for config ($ZSH/**/*completion.sh) source $config
 
-export EDITOR='nvim'
+export EDITOR='vim'
 
 export PATH=/usr/local/bin:$PATH
 
@@ -39,35 +41,15 @@ fi
 export PATH=$DOTFILES/bin:$PATH
 
 # check for custom bin directory and add to path
-if [[ -d ~/bin ]]; then
-    export PATH=~/bin:$PATH
-fi
+while IFS=  read -r -d $'\n'; do
+	PATH="$REPLY:$PATH"
+done < <(find -H ~/bin -maxdepth 2 -type d -name 'bin')
+export PATH
 
 [ -z "$TMUX" ] && export TERM=xterm-256color
 
-# install rbenv
-if hash rbenv 2>/dev/null; then
-    eval "$(rbenv init -)"
-fi
-
-if [[ -d ~/.rvm ]]; then
-    PATH=$HOME/.rvm/bin:$PATH # Add RVM to PATH for scripting
-    source ~/.rvm/scripts/rvm
-fi
-
-# alias git to hub
-if hash hub 2>/dev/null; then
-    eval "$(hub alias -s)"
-fi
-
-# source nvm
-export NVM_DIR=~/.nvm
-
-if hash brew 2>/dev/null; then
-    source $(brew --prefix nvm)/nvm.sh
-    source `brew --prefix`/etc/profile.d/z.sh
-fi
-
+# Add aliases
+alias vim=vi
 
 # Base16 Shell
 # if [ -z "$THEME" ]; then
@@ -82,4 +64,8 @@ BASE16_SHELL="$DOTFILES/.config/base16-shell/$THEME.$BACKGROUND.sh"
 source $BASE16_SHELL
 
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+# added by travis gem
+[ -f /home/joel/.travis/travis.sh ] && source /home/joel/.travis/travis.sh
+# add java path
+export JAVA_HOME=/usr/local/java/jdk1.8.0_77
+export PATH=$PATH:$JAVA_HOME/bin

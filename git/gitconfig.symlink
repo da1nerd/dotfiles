@@ -1,9 +1,9 @@
 # gitconfig
 [user]
-    name = Nick Nisi
-    email = nick@nisi.org
+    name = Joel Lonbeck
+    email = joel@neutrinographics.com
 [github]
-    user = nicknisi
+    user = neutrinog
 [init]
     templatedir = ~/.dotfiles/git/templates
 [alias]
