@@ -15,16 +15,17 @@ for file in $linkables ; do
     fi
 done
 
-echo -e "\n\ninstalling to ~/.config"
+echo -e "\n\nInstalling to ~/.config"
 echo "=============================="
 if [ ! -d $HOME/.config ]; then
     echo "Creating ~/.config"
     mkdir -p $HOME/.config
 fi
-# configs=$( find -path "$DOTFILES/config.symlink" -maxdepth 1 )
-for config in $DOTFILES/config/*; do
-    target="$HOME/.config/$( basename $config )"
-    if [ -e $target ]; then
+#configs=$( find -maxdepth 1 -path "$DOTFILES/config.symlink")
+for config in $DOTFILES/.config/*; do
+    target=$HOME/.config/$( basename $config )
+    echo "$target"
+    if [[ -e $target ]]; then
         echo "~${target#$HOME} already exists... Skipping."
     else
         echo "Creating symlink for $config"
@@ -33,13 +34,13 @@ for config in $DOTFILES/config/*; do
 done
 
 if [[ $(uname) == 'Linux' ]]; then
-    echo "\n\nCreating conky symlinks"
+    echo -e "\n\nCreating conky symlinks"
     echo "=============================="
-    ln -s $DOTFILES/conky ~/.conky
-    ln -s $DOTFILES/conky/conkyrc ~/.conkyrc
+    if [[ ! -e ~/.conky ]]; then
+        ln -s $DOTFILES/conky ~/.conky
+    fi
+    if [[ ! -e ~/.conkyrc ]]; then
+        ln -s $DOTFILES/conky/conkyrc ~/.conkyrc
+    fi
 fi
-
-echo -e "\n\nCreating vim symlinks"
-echo "=============================="
-ln -s $DOTFILES/vim ~/.vim
 

@@ -3,7 +3,7 @@
 # Backup files that are provided by the dotfiles into a ~/dotfiles-backup directory
 
 DOTFILES=$HOME/.dotfiles
-BACKUP_DIR=$HOME/dotfiles-backup
+BACKUP_DIR=$HOME/dotfiles-backup/
 
 set -e # TODO: what does this do?
 
@@ -17,7 +17,7 @@ for file in $linkables; do
     target="$HOME/$filename"
     if [ -e $target ]; then
         echo "backing up $filename"
-        cp $target $BACKUP_DIR
+        cp -r $target $BACKUP_DIR
     fi
 done
 
