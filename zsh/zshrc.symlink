@@ -50,6 +50,7 @@ export PATH
 
 # Add aliases
 alias vim=vi
+alias open=nautilus
 
 # Base16 Shell
 # if [ -z "$THEME" ]; then

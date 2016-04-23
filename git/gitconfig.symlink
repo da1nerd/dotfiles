@@ -18,6 +18,7 @@
     ss  = status
     br = branch -v
 
+	ll = log --graph --pretty=format:'%Cred%h%Creset %C(bold blue)%an%C(reset) - %s - %Creset %C(yellow)%d%Creset %Cgreen(%cr)%Creset' --abbrev-commit --date=relative --all
     l = log --graph --pretty=format:'%Cred%h%Creset %C(bold blue)%an%C(reset) - %s - %Creset %C(yellow)%d%Creset %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
 
     # show what I did today
@@ -50,7 +51,7 @@
     cleanup = "!git remote prune origin && git gc && git clean -df && git stash clear"
 
     # rebase the current branch with changes from upstream remote
-    update = !git fetch upstream && git rebase upstream/`git rev-parse --abbrev-ref HEAD`
+    #update = !git fetch upstream && git rebase upstream/`git rev-parse --abbrev-ref HEAD`
 
     # tag aliases
     # show the last tag
@@ -109,9 +110,10 @@
 [push]
     # push will only do the current branch, not all branches
     default = current
-[branch]
+#[branch]
     # set up 'git pull' to rebase instead of merge
-    autosetuprebase = always
+[merge]
+	ff = false
 [diff]
     renames = copies
     mnemonicprefix = true
@@ -141,3 +143,5 @@
 	trustexitcode = true
 [rebase]
 	instructionFormat = "[%an - %ar] %s"
+[pull]
+	rebase = false
