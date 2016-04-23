@@ -142,8 +142,8 @@ defaults write NSGlobalDomain InitialKeyRepeat -int 15
 #defaults write com.apple.screensaver askForPassword -int 1
 #defaults write com.apple.screensaver askForPasswordDelay -int 0
 
-echo "Enable tap to click (Trackpad)"
-defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
+#echo "Enable tap to click (Trackpad)"
+#defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
 
 #echo "Map bottom right Trackpad corner to right-click"
 #defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadCornerSecondaryClick -int 2
@@ -152,8 +152,8 @@ defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool
 # echo "Disable Safari’s thumbnail cache for History and Top Sites"
 # defaults write com.apple.Safari DebugSnapshotsUpdatePolicy -int 2
 
-echo "Enable Safari’s debug menu"
-defaults write com.apple.Safari IncludeInternalDebugMenu -bool true
+#echo "Enable Safari’s debug menu"
+#defaults write com.apple.Safari IncludeInternalDebugMenu -bool true
 
 # echo "Make Safari’s search banners default to Contains instead of Starts With"
 # defaults write com.apple.Safari FindOnPageMatchesWordStartsOnly -bool false

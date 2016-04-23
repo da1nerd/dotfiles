@@ -12,9 +12,6 @@ if [[ -d ~/git ]]; then
     export CODE_DIR=~/git
 fi
 
-# remap caps log to ctrl
-setxkbmap -option ctrl:nocaps
-
 # source all .zsh files inside of the zsh/ directory
 for config ($ZSH/**/*.zsh) source $config
 

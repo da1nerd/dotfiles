@@ -19,7 +19,7 @@ brew install dnsmasq
 
 # development tools
 brew install git
-brew install hub
+#brew install hub
 brew install macvim --override-system-vim
 brew install reattach-to-user-namespace
 brew install tmux
@@ -30,6 +30,6 @@ brew install z
 brew install markdown
 
 # install neovim
-brew install neovim/neovim/neovim
+#brew install neovim/neovim/neovim
 
-exit 0
+#exit 0
