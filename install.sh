@@ -20,12 +20,13 @@ if [ "$(uname -s)" == "Darwin" ]; then
 elif [ "$(uname -s)" == "Linux" ]; then
 	echo -e "\n\nRunning on Linux"
 
-	#sudo apt-get update
-	#sudo apt-get intall ruby
-	#sudo apt-get install ruby-dev
-	#sudo apt-get install conky conky-all
-	#sudo apt-get install zsh
-
+	sudo apt-get update
+	sudo apt-get intall ruby
+	sudo apt-get install ruby-dev
+	sudo apt-get install conky conky-all
+	sudo apt-get install zsh
+	sudo apt-get install lm-sensors
+	
 	# TODO: install npm
 	#npm install -g bower
 
