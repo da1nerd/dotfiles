@@ -26,6 +26,7 @@ elif [ "$(uname -s)" == "Linux" ]; then
 	sudo apt-get install conky conky-all
 	sudo apt-get install zsh
 	sudo apt-get install lm-sensors
+	sudo apt-get install xclip
 	
 	# TODO: install npm
 	#npm install -g bower

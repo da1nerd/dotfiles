@@ -49,6 +49,7 @@ export PATH
 alias vim=vi
 if [[ `uname` == 'Linux' ]]; then
     alias open=nautilus
+	alias xclip="xclip -selection c"
 fi
 
 # Base16 Shell
@@ -63,6 +64,10 @@ BASE16_SHELL="$DOTFILES/.config/base16-shell/$THEME.$BACKGROUND.sh"
 # [[ -s $BASE16_SHELL ]] && source $BASE16_SHELL
 source $BASE16_SHELL
 
+# add android platform tolls
+if [[ -d ~/Android/Sdk/platform-tools ]]; then
+	export PATH=~/Android/Sdk/platform-tools:$PATH
+fi
 
 # added by travis gem
 [ -f /home/joel/.travis/travis.sh ] && source /home/joel/.travis/travis.sh
