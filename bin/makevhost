@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+
+hosts=/etc/hosts
+
+set -e
+
+# validate arguments
+if [[ $# -lt 2 ]]
+then
+	echo "missing arguments"
+	echo "expecting 'alias' and 'site path'"
+	exit 0
+fi
+
+# elevate
+if [[ $EUID != 0 ]]
+then
+	sudo "$0" "$@"
+	exit $?
+fi
+
+# get script path
+pushd `dirname $0` > /dev/null
+SCRIPTPATH=`pwd -P`
+popd > /dev/null
+
+# make sure nginx exists
+hash nginx 2>/dev/null || {
+	echo "nginx is not installed"
+	exit 0
+}
+
+# check for existing
+if grep "$1" $hosts
+then
+	echo "$1 has already been added to $hosts"
+	exit 0
+fi
+
+# add to hosts
+echo "127.0.0.1	$1" >> "$hosts"
+
+# add nginx vhost
+vhost=/etc/nginx/sites-available/$1
+cp $SCRIPTPATH/../nginx/sites-available/template.dev $vhost 
+sed -i -e "s@{{ROOT}}@$2@g" $vhost
+sed -i -e "s@{{ALIAS}}@$1@g" $vhost 
+ln -s $vhost /etc/nginx/sites-enabled/$1
+service nginx restart
+
+exit 0
