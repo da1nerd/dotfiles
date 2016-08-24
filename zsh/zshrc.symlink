@@ -34,6 +34,9 @@ if [[ -d /usr/local/sbin ]]; then
     export PATH=/usr/local/sbin:$PATH
 fi
 
+if [[ -d /usr/local/mysql/bin ]]; then
+	export PATH=/usr/local/mysql/bin:$PATH
+fi
 # adding path directory for custom scripts
 export PATH=$DOTFILES/bin:$PATH
 
@@ -72,3 +75,5 @@ export PATH=$PATH:$JAVA_HOME/bin
 
 # disable caps lock in favor of ctrl
 setxkbmap -option ctrl:nocaps
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
