@@ -1,0 +1,11 @@
+set nocompatible
+set autoread
+set backspace=indent,eol,start
+set clipboard=unnamed
+set ttyfast
+
+let mapleader = ','
+let g:mapleader = ','
+
+imap jj <ESC>
+
