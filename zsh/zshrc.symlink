@@ -34,9 +34,16 @@ if [[ -d /usr/local/sbin ]]; then
     export PATH=/usr/local/sbin:$PATH
 fi
 
+# add flutter
+if [[ -d ~/git/flutter ]]; then
+	export PATH=~/git/flutter/bin:$PATH
+fi
+
+# add mysql
 if [[ -d /usr/local/mysql/bin ]]; then
 	export PATH=/usr/local/mysql/bin:$PATH
 fi
+
 # adding path directory for custom scripts
 export PATH=$DOTFILES/bin:$PATH
 
