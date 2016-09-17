@@ -21,12 +21,15 @@ elif [ "$(uname -s)" == "Linux" ]; then
 	echo -e "\n\nRunning on Linux"
 
 	sudo apt-get update
-	sudo apt-get intall ruby
-	sudo apt-get install ruby-dev
-	sudo apt-get install conky conky-all
-	sudo apt-get install zsh
-	sudo apt-get install lm-sensors
-	sudo apt-get install xclip
+	sudo apt-get -y install ruby
+	sudo apt-get -y install ruby-dev
+	sudo apt-get -y install conky conky-all
+	sudo apt-get -y install zsh
+	sudo apt-get -y install lm-sensors
+	sudo apt-get -y install xclip
+	sudo apt-get -y install tmux
+	sudo apt-get -y install vim-gui-common
+	sudo apt-get -y install vim-runtime
 	
 	# TODO: install npm
 	#npm install -g bower
@@ -48,3 +51,4 @@ echo "Configuring zsh as default shell"
 chsh -s $(which zsh)
 
 echo "Done."
+echo "Finish with 'vim +PlugInstall' to set up vim"
