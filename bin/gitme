@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+BASE_DIR=~/git
+
+set -e
+
+echo "this tool will clone a repo into your ~/git folder" 
+
+if [[ $# -lt 1 ]]
+then
+	echo "give me a 'user/repo'!"
+	exit 1
+fi
+
+# set custom dest dir
+if [[ $# -eq 1 ]]
+then
+DEST=$BASE_DIR/$1
+else
+DEST=$2
+fi
+
+git clone git@github.com:$1 $DEST
