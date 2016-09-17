@@ -64,13 +64,13 @@ fi
 
 # Base16 Shell
 # if [ -z "$THEME" ]; then
-    export THEME="base16-atelierlakeside"
+    export THEME="base16-atelier-lakeside"
 # fi
 if [ -z "$BACKGROUND" ]; then
     export BACKGROUND="dark"
 fi
 
-BASE16_SHELL="$DOTFILES/.config/base16-shell/$THEME.$BACKGROUND.sh"
+BASE16_SHELL="$DOTFILES/.config/base16-shell/scripts/$THEME.sh"
 # [[ -s $BASE16_SHELL ]] && source $BASE16_SHELL
 source $BASE16_SHELL
 
