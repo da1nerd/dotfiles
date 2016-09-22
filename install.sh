@@ -31,7 +31,7 @@ elif [ "$(uname -s)" == "Linux" ]; then
 	sudo apt-get -y install vim-gui-common
 	sudo apt-get -y install vim-runtime
 	sudo apt-get -y install build-essential
-	sudo apt-get -y install php7.0 php7.0-fpm php7.0-mysql
+	sudo apt-get -y install php7.0 php7.0-fpm php7.0-mysql php7.0-mbstring
 	sudo apt-get -y install nginx
 	curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
 	sudo apt-get -y install nodejs
