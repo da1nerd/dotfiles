@@ -30,9 +30,20 @@ elif [ "$(uname -s)" == "Linux" ]; then
 	sudo apt-get -y install tmux
 	sudo apt-get -y install vim-gui-common
 	sudo apt-get -y install vim-runtime
+	sudo apt-get -y install build-essential
+	sudo apt-get -y install php7.0 php7.0-fpm php7.0-mysql
+	sudo apt-get -y install nginx
+	curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+	sudo apt-get -y install nodejs
 	
-	# TODO: install npm
 	#npm install -g bower
+	sudo apt-get -y autoremove
+
+	echo "You need to change the nginx user for vhosts to work"
+	echo "edit /etc/nginx/nginx.conf"
+	echo ""
+	echo "You need to change the php7.0 user and group to your username"
+	echo "edit /etc/php/7.0/fpm/pool.d/www.conf"
 
 	echo "Disabling Caps Lock in favor of CTRL"
 	setxkbmap -option ctrl:nocaps

@@ -4,11 +4,11 @@ BASE_DIR=~/git
 
 set -e
 
-echo "this tool will clone a repo into your ~/git folder" 
+echo "this tool will clone a Github repo into your ~/git folder" 
 
 if [[ $# -lt 1 ]]
 then
-	echo "give me a 'user/repo'!"
+	echo "give me a 'user/repo'! If you want to specify the clone directory do it after the user/repo!"
 	exit 1
 fi
 
