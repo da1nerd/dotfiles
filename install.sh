@@ -21,15 +21,29 @@ elif [ "$(uname -s)" == "Linux" ]; then
 	echo -e "\n\nRunning on Linux"
 
 	sudo apt-get update
-	sudo apt-get intall ruby
-	sudo apt-get install ruby-dev
-	sudo apt-get install conky conky-all
-	sudo apt-get install zsh
-	sudo apt-get install lm-sensors
-	sudo apt-get install xclip
+	sudo apt-get -y install ruby
+	sudo apt-get -y install ruby-dev
+	sudo apt-get -y install conky conky-all
+	sudo apt-get -y install zsh
+	sudo apt-get -y install lm-sensors
+	sudo apt-get -y install xclip
+	sudo apt-get -y install tmux
+	sudo apt-get -y install vim-gui-common
+	sudo apt-get -y install vim-runtime
+	sudo apt-get -y install build-essential
+	sudo apt-get -y install php7.0 php7.0-fpm php7.0-mysql php7.0-mbstring
+	sudo apt-get -y install nginx
+	curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+	sudo apt-get -y install nodejs
 	
-	# TODO: install npm
 	#npm install -g bower
+	sudo apt-get -y autoremove
+
+	echo "You need to change the nginx user for vhosts to work"
+	echo "edit /etc/nginx/nginx.conf"
+	echo ""
+	echo "You need to change the php7.0 user and group to your username"
+	echo "edit /etc/php/7.0/fpm/pool.d/www.conf"
 
 	echo "Disabling Caps Lock in favor of CTRL"
 	setxkbmap -option ctrl:nocaps
@@ -48,3 +62,4 @@ echo "Configuring zsh as default shell"
 chsh -s $(which zsh)
 
 echo "Done."
+echo "Finish with 'vim +PlugInstall' to set up vim"
