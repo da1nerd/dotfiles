@@ -1,0 +1,59 @@
+#!/bin/bash
+
+# This performs a mysqldump for all databases 
+# and stores them in a hidden folder in you home dir.
+#
+# Requirements:
+# This script depends on the mysql user and password being 
+# configured for the user running the script.
+# Create the file ~/.my.conf and place the following inside it
+# 
+# [mysqldump]
+# user=<your mysql user>
+# password=<the mysql user password>
+#
+# Suggested Use:
+# A great way to use this script is to configure a
+# cron job so you always have continuous backups.
+# You can edit the crontab for the current user like the following:
+#
+# crontab -e
+#
+# Once you are editing the crontab add the following job:
+#
+# 0 0 1/1 * * mysqldumper
+#
+# This will run the job ever day at midnight
+
+set -e
+
+DUMP_DIR=~/.mysqldumps
+LATEST_DUMP=$DUMP_DIR/latest_dump.sql
+LOG=$DUMP_DIR/dump.log
+HISTORY_DIR=$DUMP_DIR/history
+CURRENT_DUMP=$HISTORY_DIR/$(date +"%Y-%m-%d_%H-%M-%S").sql
+mkdir -p $DUMP_DIR
+mkdir -p $HISTORY_DIR
+
+echo "This is a handy-dandy backup tool for mysql databases!"
+echo ""
+echo "Backing up databases to $DUMP_DIR"
+START_TIME=$(date +"%s")
+
+# dump databases 
+mysqldump --all-databases --add-drop-table > $CURRENT_DUMP
+echo "dumped $CURRENT_DUMP" >> $LOG
+
+# link to latest
+rm $LATEST_DUMP
+ln -s $CURRENT_DUMP $LATEST_DUMP 
+
+# forget history
+echo "cleaning old history" >> $LOG
+find $HISTORY_DIR -name "*.sql" -mtime +30 -type f -print -delete >> $LOG
+
+END_TIME=$(date +%s)
+ELAPSED_TIME=$(expr $END_TIME - $START_TIME)
+
+echo "Backup complete."
+echo "Elapsed Time: $(date -d 00:00:$ELAPSED_TIME +%Hh:%Mm:%Ss)"
