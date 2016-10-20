@@ -6,7 +6,7 @@
 # Requirements:
 # This script depends on the mysql user and password being 
 # configured for the user running the script.
-# Create the file ~/.my.conf and place the following inside it
+# Create the file ~/.my.cnf and place the following inside it
 # 
 # [mysqldump]
 # user=<your mysql user>
