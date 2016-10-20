@@ -45,7 +45,9 @@ mysqldump --all-databases --add-drop-table > $CURRENT_DUMP
 echo "dumped $CURRENT_DUMP" >> $LOG
 
 # link to latest
-rm $LATEST_DUMP
+if [ -f $LATEST_DUMP ] ; then
+	rm $LATEST_DUMP
+fi
 ln -s $CURRENT_DUMP $LATEST_DUMP 
 
 # forget history
