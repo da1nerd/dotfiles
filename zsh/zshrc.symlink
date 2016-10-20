@@ -34,9 +34,16 @@ if [[ -d /usr/local/sbin ]]; then
     export PATH=/usr/local/sbin:$PATH
 fi
 
+# add flutter
+if [[ -d ~/git/flutter ]]; then
+	export PATH=~/git/flutter/bin:$PATH
+fi
+
+# add mysql
 if [[ -d /usr/local/mysql/bin ]]; then
 	export PATH=/usr/local/mysql/bin:$PATH
 fi
+
 # adding path directory for custom scripts
 export PATH=$DOTFILES/bin:$PATH
 
@@ -57,17 +64,17 @@ fi
 
 # Base16 Shell
 # if [ -z "$THEME" ]; then
-    export THEME="base16-atelierlakeside"
+    export THEME="base16-atelier-lakeside"
 # fi
 if [ -z "$BACKGROUND" ]; then
     export BACKGROUND="dark"
 fi
 
-BASE16_SHELL="$DOTFILES/.config/base16-shell/$THEME.$BACKGROUND.sh"
+BASE16_SHELL="$DOTFILES/.config/base16-shell/scripts/$THEME.sh"
 # [[ -s $BASE16_SHELL ]] && source $BASE16_SHELL
 source $BASE16_SHELL
 
-# add android platform tolls
+# add android platform tools
 if [[ -d ~/Android/Sdk/platform-tools ]]; then
 	export PATH=~/Android/Sdk/platform-tools:$PATH
 fi
