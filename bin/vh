@@ -40,12 +40,23 @@ fi
 # add to hosts
 echo "127.0.0.1	$1" >> "$hosts"
 
+if [ "$(uname -s)" == "Darwin" ]; then
+	NGINX_ROOT=/usr/local/etc/nginx
+else
+	NGINX_ROOT=/etc/nginx
+fi
+
 # add nginx vhost
-vhost=/etc/nginx/sites-available/$1
+vhost=$NGINX_ROOT/sites-available/$1
 cp $SCRIPTPATH/../nginx/sites-available/template.dev $vhost 
 sed -i -e "s@{{ROOT}}@$2@g" $vhost
 sed -i -e "s@{{ALIAS}}@$1@g" $vhost 
-ln -s $vhost /etc/nginx/sites-enabled/$1
-service nginx restart
+ln -s $vhost $NGINX_ROOT/sites-enabled/$1
+
+if [ "$(uname -s)" == "Darwin" ]; then
+	nginx -s reload
+else
+	service nginx restart
+fi
 
 exit 0
