@@ -48,6 +48,8 @@ elif [ "$(uname -s)" == "Linux" ]; then
 	sudo apt-get -y install compton
 	sudo apt-get -y install i3blocks
 	sudo apt-get -y install pavucontrol
+	sudo apt-get -y install scrot
+	sudo apt-get -y install imagemagick
 
 	#npm install -g bower
 	sudo apt-get -y autoremove

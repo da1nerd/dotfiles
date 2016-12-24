@@ -187,7 +187,7 @@ bar {
 		}
 }
 
-bindsym $mod+shift+x exec i3lock --color "$bg-color"
+bindsym $mod+shift+x exec ~/.config/i3/lock.sh
 
 
 bindsym $mod+d exec ~/.config/i3/rofi.sh 
