@@ -123,7 +123,7 @@ bindsym $mod+Shift+0 move container to workspace $workspace10
 
 # Workspace assignments
 # to open 
-assign [class="Rhythmbox"] $workspace10
+#assign [class="Rhythmbox"] $workspace10
 assign [class="Firefox"] $workspace2
 
 # reload the configuration file
@@ -203,7 +203,7 @@ bindsym XF86AudioPause exec playerctl pause
 bindsym XF86AudioNext exec playerctl next
 bindsym XF86AudioPrev exec playerctl previous
 
-exec rhythmbox
+#exec rhythmbox
 exec_always feh --bg-scale /home/joel/Pictures/wallpaper.jpg
 exec_always --no-startup-id xrandr --output DVI-I-1 --primary --mode 1920x1080 --pos 0x0 --rotate normal --output DVI-I-2 --off
 exec compton -f
