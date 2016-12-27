@@ -204,6 +204,6 @@ bindsym XF86AudioNext exec playerctl next
 bindsym XF86AudioPrev exec playerctl previous
 
 #exec rhythmbox
-exec_always feh --bg-scale /home/joel/Pictures/wallpaper.jpg
+exec_always feh --bg-scale ~/.config/i3/wallpaper.jpg
 exec_always --no-startup-id xrandr --output DVI-I-1 --primary --mode 1920x1080 --pos 0x0 --rotate normal --output DVI-I-2 --off
 exec compton -f
