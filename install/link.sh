@@ -34,18 +34,18 @@ for config in $DOTFILES/.config/*; do
 done
 
 # TODO: load conky paths into an array and iterate
-if [[ $(uname) == 'Linux' ]]; then
-    echo -e "\n\nCreating conky symlinks"
-    echo "=============================="
-    if [[ ! -e ~/.conky ]]; then
-        ln -s $DOTFILES/conky ~/.conky
-    else
-        echo "~/.conky already exists... Skipping."
-    fi
-    if [[ ! -e ~/.conkyrc ]]; then
-        ln -s $DOTFILES/conky/conkyrc ~/.conkyrc
-    else
-        echo "~/.conkyrc already exists... Skipping."
-    fi
-fi
+#if [[ $(uname) == 'Linux' ]]; then
+#    echo -e "\n\nCreating conky symlinks"
+    #echo "=============================="
+    #if [[ ! -e ~/.conky ]]; then
+    #    ln -s $DOTFILES/conky ~/.conky
+    #else
+    #    echo "~/.conky already exists... Skipping."
+    #fi
+    #if [[ ! -e ~/.conkyrc ]]; then
+    #    ln -s $DOTFILES/conky/conkyrc ~/.conkyrc
+    #else
+    #    echo "~/.conkyrc already exists... Skipping."
+    #fi
+#fi
 
