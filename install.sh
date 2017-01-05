@@ -20,6 +20,10 @@ if [ "$(uname -s)" == "Darwin" ]; then
 elif [ "$(uname -s)" == "Linux" ]; then
 	echo -e "\n\nRunning on Linux"
 
+	# set up sources
+	sudo sh -c "echo 'deb http://download.opensuse.org/repositories/home:/Horst3180/xUbuntu_15.10/ /' >> /etc/apt/sources.list.d/arc-theme.list"
+	sudo add-apt-repository -y ppa:moka/stable
+
 	sudo apt-get update
 	sudo apt-get -y install ruby
 	sudo apt-get -y install ruby-dev
