@@ -21,7 +21,9 @@ elif [ "$(uname -s)" == "Linux" ]; then
 	echo -e "\n\nRunning on Linux"
 
 	# set up sources
-	sudo sh -c "echo 'deb http://download.opensuse.org/repositories/home:/Horst3180/xUbuntu_15.10/ /' >> /etc/apt/sources.list.d/arc-theme.list"
+	# TODO: instead of overwriting the theme list we should just insert if it 
+	# does not exist
+	sudo sh -c "echo 'deb http://download.opensuse.org/repositories/home:/Horst3180/xUbuntu_15.10/ /' > /etc/apt/sources.list.d/arc-theme.list"
 	sudo add-apt-repository -y ppa:moka/stable
 
 	sudo apt-get update
