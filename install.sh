@@ -21,6 +21,9 @@ elif [ "$(uname -s)" == "Linux" ]; then
 	echo -e "\n\nRunning on Linux"
 
 	# set up sources
+	curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+	echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+
 	# TODO: instead of overwriting the theme list we should just insert if it 
 	# does not exist
 	sudo sh -c "echo 'deb http://download.opensuse.org/repositories/home:/Horst3180/xUbuntu_15.10/ /' > /etc/apt/sources.list.d/arc-theme.list"
@@ -41,6 +44,9 @@ elif [ "$(uname -s)" == "Linux" ]; then
 	sudo apt-get -y install nginx
 	curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
 	sudo apt-get -y install nodejs
+
+	# yarn for package management
+	sudo apt-get update && sudo apt-get install yarn	
 
 	# i3 stuff
 	sudo apt-get -y install i3
