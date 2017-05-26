@@ -34,9 +34,15 @@ if [[ -d /usr/local/sbin ]]; then
     export PATH=/usr/local/sbin:$PATH
 fi
 
+# add composer
+if [[ -d ~/.config/composer/vendor/bin ]]; then
+	export PATH=~/.config/composer/vendor/bin:$PATH
+fi
+
 # add flutter
 if [[ -d ~/git/flutter ]]; then
 	export PATH=~/git/flutter/bin:$PATH
+	export PATH=~/git/flutter/flutter/bin:$PATH
 fi
 
 # add mysql
