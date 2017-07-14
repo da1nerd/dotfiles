@@ -49,19 +49,19 @@ elif [ "$(uname -s)" == "Linux" ]; then
 	sudo apt-get update && sudo apt-get install yarn	
 
 	# i3 stuff
-	sudo apt-get -y install i3
-	sudo apt-get -y install feh
-	sudo apt-get -y install arandr
-	sudo apt-get -y install lxappearance
-	sudo apt-get -y install thunar
-	sudo apt-get -y install arc-theme
-	sudo apt-get -y install moka-icon-theme
-	sudo apt-get -y install rofi
-	sudo apt-get -y install compton
-	sudo apt-get -y install i3blocks
-	sudo apt-get -y install pavucontrol
-	sudo apt-get -y install scrot
-	sudo apt-get -y install imagemagick
+	#sudo apt-get -y install i3
+	#sudo apt-get -y install feh
+	#sudo apt-get -y install arandr
+	#sudo apt-get -y install lxappearance
+	#sudo apt-get -y install thunar
+	#sudo apt-get -y install arc-theme
+	#sudo apt-get -y install moka-icon-theme
+	#sudo apt-get -y install rofi
+	#sudo apt-get -y install compton
+	#sudo apt-get -y install i3blocks
+	#sudo apt-get -y install pavucontrol
+	#sudo apt-get -y install scrot
+	#sudo apt-get -y install imagemagick
 
 	#npm install -g bower
 	sudo apt-get -y autoremove
