@@ -24,10 +24,11 @@ elif [ "$(uname -s)" == "Linux" ]; then
 	curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
 	echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
 
+	# i3 stuff
 	# TODO: instead of overwriting the theme list we should just insert if it 
 	# does not exist
-	sudo sh -c "echo 'deb http://download.opensuse.org/repositories/home:/Horst3180/xUbuntu_15.10/ /' > /etc/apt/sources.list.d/arc-theme.list"
-	sudo add-apt-repository -y ppa:moka/stable
+	# sudo sh -c "echo 'deb http://download.opensuse.org/repositories/home:/Horst3180/xUbuntu_15.10/ /' > /etc/apt/sources.list.d/arc-theme.list"
+	# sudo add-apt-repository -y ppa:moka/stable
 
 	sudo apt-get update
 	sudo apt-get -y install ruby
