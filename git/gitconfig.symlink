@@ -114,7 +114,7 @@
 #[branch]
     # set up 'git pull' to rebase instead of merge
 [merge]
-	ff = false
+	ff = true
 [diff]
     renames = copies
     mnemonicprefix = true

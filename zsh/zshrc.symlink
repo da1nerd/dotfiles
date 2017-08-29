@@ -81,6 +81,12 @@ BASE16_SHELL="$DOTFILES/.config/base16-shell/scripts/$THEME.sh"
 source $BASE16_SHELL
 
 # add android platform tools
+if [[ -d ~/Android/Sdk ]]; then
+	export ANDROID_HOME=~/Android/Sdk
+fi
+if [[ -d ~/Android/Sdk/tools ]]; then
+	export PATH=~/Android/Sdk/tools:$PATH
+fi
 if [[ -d ~/Android/Sdk/platform-tools ]]; then
 	export PATH=~/Android/Sdk/platform-tools:$PATH
 fi
