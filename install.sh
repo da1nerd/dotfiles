@@ -24,10 +24,11 @@ elif [ "$(uname -s)" == "Linux" ]; then
 	curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
 	echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
 
+	# i3 stuff
 	# TODO: instead of overwriting the theme list we should just insert if it 
 	# does not exist
-	sudo sh -c "echo 'deb http://download.opensuse.org/repositories/home:/Horst3180/xUbuntu_15.10/ /' > /etc/apt/sources.list.d/arc-theme.list"
-	sudo add-apt-repository -y ppa:moka/stable
+	# sudo sh -c "echo 'deb http://download.opensuse.org/repositories/home:/Horst3180/xUbuntu_15.10/ /' > /etc/apt/sources.list.d/arc-theme.list"
+	# sudo add-apt-repository -y ppa:moka/stable
 
 	sudo apt-get update
 	sudo apt-get -y install ruby
@@ -49,19 +50,19 @@ elif [ "$(uname -s)" == "Linux" ]; then
 	sudo apt-get update && sudo apt-get install yarn	
 
 	# i3 stuff
-	sudo apt-get -y install i3
-	sudo apt-get -y install feh
-	sudo apt-get -y install arandr
-	sudo apt-get -y install lxappearance
-	sudo apt-get -y install thunar
-	sudo apt-get -y install arc-theme
-	sudo apt-get -y install moka-icon-theme
-	sudo apt-get -y install rofi
-	sudo apt-get -y install compton
-	sudo apt-get -y install i3blocks
-	sudo apt-get -y install pavucontrol
-	sudo apt-get -y install scrot
-	sudo apt-get -y install imagemagick
+	#sudo apt-get -y install i3
+	#sudo apt-get -y install feh
+	#sudo apt-get -y install arandr
+	#sudo apt-get -y install lxappearance
+	#sudo apt-get -y install thunar
+	#sudo apt-get -y install arc-theme
+	#sudo apt-get -y install moka-icon-theme
+	#sudo apt-get -y install rofi
+	#sudo apt-get -y install compton
+	#sudo apt-get -y install i3blocks
+	#sudo apt-get -y install pavucontrol
+	#sudo apt-get -y install scrot
+	#sudo apt-get -y install imagemagick
 
 	#npm install -g bower
 	sudo apt-get -y autoremove

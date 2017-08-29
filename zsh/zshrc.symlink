@@ -90,6 +90,9 @@ fi
 if [[ -d ~/Android/Sdk/platform-tools ]]; then
 	export PATH=~/Android/Sdk/platform-tools:$PATH
 fi
+if [[ -d ~/Android/Sdk ]]; then
+	export ANDROID_HOME=~/Android/Sdk
+fi
 
 # add travis path
 [ -f ~/.travis/travis.sh ] && source ~/.travis/travis.sh
@@ -103,8 +106,14 @@ setxkbmap -option ctrl:nocaps
 
 # add paths to node
 export PATH=$HOME/.node/bin:$PATH
+NPM_PACKAGES="$HOME/.npm-packages"
+export PATH="$NPM_PACKAGES/bin:$PATH"
+export MANPATH="$NPM_PACKAGES/share/man"
+export NODE_PATH="$NPM_PACKAGES/lib/node_modules:$NODE_PATH"
 
-export PATH="$PATH: `yarn global bin`"
+if (( $+commands[yarn] )); then
+	export PATH="$PATH: `yarn global bin`"
+fi
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
