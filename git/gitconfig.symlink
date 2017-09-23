@@ -9,7 +9,7 @@
     templatedir = ~/.dotfiles/git/templates
 [alias]
 	# show age of files since last touched
-	age = "bash ~/.dotfiles/git/gitage.sh"
+	age = "! ~/.dotfiles/git/gitage.sh"
     # list all aliases
     la = "!git config -l | grep alias | cut -c 7-"
     delete-merged-branches = "!f() { git checkout --quiet master && git branch --merged | grep --invert-match '\\*' | xargs -n 1 git branch --delete; git checkout --quiet @{-1}; }; f"
