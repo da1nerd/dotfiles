@@ -118,4 +118,8 @@ fi
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
 # added by travis gem
-[ -f /home/joel/.travis/travis.sh ] && source /home/joel/.travis/travis.sh
+[ -f ~/.travis/travis.sh ] && source ~/.travis/travis.sh
+
+# tabtab source for electron-forge package
+# uninstall by removing these lines or running `tabtab uninstall electron-forge`
+[[ -f ~/.node/lib/node_modules/electron-forge/node_modules/tabtab/.completions/electron-forge.zsh ]] && . ~/.node/lib/node_modules/electron-forge/node_modules/tabtab/.completions/electron-forge.zsh
