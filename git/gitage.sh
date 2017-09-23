@@ -1,5 +1,7 @@
 #! /bin/bash
 
+# taken from https://hackerific.net/2016/05/08/splitting-day-one-exports/
+
 function main {
     local reverse=false format='%cr'
     DEBUG=false 
