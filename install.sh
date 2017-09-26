@@ -35,6 +35,7 @@ elif [ "$(uname -s)" == "Linux" ]; then
 	sudo apt-get -y install ruby-dev
 	#sudo apt-get -y install conky conky-all
 	sudo apt-get -y install zsh
+	sudo apt-get -y install ack-grep
 	sudo apt-get -y install lm-sensors
 	sudo apt-get -y install xclip
 	sudo apt-get -y install tmux

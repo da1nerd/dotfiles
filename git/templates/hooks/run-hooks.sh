@@ -9,7 +9,8 @@ hooks=~/.dotfiles/git/hooks
 echo "Executing $hook_type hook(s)"
 
 for hook in $hooks/*.$hook_type; do
-	if [ -e "$hook" ]; then
+	if [ -e "${hook}" ]
+	then
 		echo ""
 		echo "${COLOR_LIGHTPURPLE}Executing ${hook}${COLOR_NONE}"
 		${hook}
