@@ -105,5 +105,3 @@ fi
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
-# added by travis gem
-[ -f /home/joel/.travis/travis.sh ] && source /home/joel/.travis/travis.sh
