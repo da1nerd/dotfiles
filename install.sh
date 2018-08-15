@@ -69,6 +69,9 @@ elif [ "$(uname -s)" == "Linux" ]; then
 	#npm install -g bower
 	sudo apt-get -y autoremove
 
+	npm i -g git-stats
+	npm i -g git-stats-importer
+
 	echo "You need to change the nginx user for vhosts to work"
 	echo "edit /etc/nginx/nginx.conf"
 	echo ""
