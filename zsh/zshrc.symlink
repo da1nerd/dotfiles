@@ -12,6 +12,10 @@ if [[ -d ~/git ]]; then
     export CODE_DIR=~/git
 fi
 
+# add go paths
+export GOPATH=~/go
+export PATH=$PATH:/usr/local/go/bin:~/go/bin
+
 # source all .zsh files inside of the zsh/ directory
 for config ($ZSH/**/*.zsh) source $config
 
@@ -68,6 +72,9 @@ if [[ `uname` == 'Linux' ]]; then
 	alias xclip="xclip -selection c"
 fi
 
+# did file alias
+alias did="vim +'normal Go' +'r!date' ~/did.txt"
+
 # Base16 Shell
 # if [ -z "$THEME" ]; then
     export THEME="base16-atelier-lakeside"
@@ -98,7 +105,7 @@ fi
 [ -f ~/.travis/travis.sh ] && source ~/.travis/travis.sh
 
 # add java path
-export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/
+export JAVA_HOME=/opt/java/jdk1.8.0_171
 export PATH=$PATH:$JAVA_HOME/bin
 
 # disable caps lock in favor of ctrl
