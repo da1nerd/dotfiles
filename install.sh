@@ -62,6 +62,7 @@ echo "Creating bin directories"
 mkdir -p ~/bin
 
 echo "Configuring zsh as default shell"
+echo "You may need to run this again without being sudo in order for it to work"
 chsh -s $(which zsh)
 echo "# Bootstrap zshrc from dotfiles" >> ~/.zshrc
 echo "source $DOTFILES/zsh/zshrc.bootstrap" >> ~/.zshrc
