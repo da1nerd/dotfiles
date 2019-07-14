@@ -21,8 +21,10 @@ elif [ "$(uname -s)" == "Linux" ]; then
 	echo -e "\n\nRunning on Linux"
 
 	# set up sources
-	curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
 	echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+	curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+	echo "deb http://linux-packages.resilio.com/resilio-sync/deb resilio-sync non-free" | sudo tee /etc/apt/sources.list.d/resilio-sync.list
+	curl -LO http://linux-packages.resilio.com/resilio-sync/key.asc && sudo apt-key add ./key.asc
 
 	sudo apt-get update
 	sudo apt-get -y install ruby
@@ -41,7 +43,17 @@ elif [ "$(uname -s)" == "Linux" ]; then
 	# curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
 	sudo apt-get -y install nodejs
 	sudo apt-get -y install yarn
+	sudo apt-get -y install resilio-sync
 	sudo apt-get -y autoremove
+
+	# Configure sync
+	sudo systemctl enable resilio-sync
+	sudo usermod -aG $USER rslsync
+	sudo usermod -aG rslsync $USER
+	sudo service resilio-sync start
+
+	# TODO: check if running pop-os. if it is then install appindicator extension.
+	# see https://pop.system76.com/docs/status-icons/
 
 	# echo "You need to change the nginx user for vhosts to work"
 	# echo "edit /etc/nginx/nginx.conf"
