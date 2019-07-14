@@ -5,7 +5,7 @@
 DOTFILES=$HOME/.dotfiles
 BACKUP_DIR=$HOME/dotfiles-backup/
 
-set -e # TODO: what does this do?
+set -e
 
 echo "Creating backup directory at $BACKUP_DIR"
 mkdir -p $BACKUP_DIR
@@ -17,13 +17,13 @@ for file in $linkables; do
     target="$HOME/$filename"
     if [ -e $target ]; then
         echo "backing up $filename"
-        cp -r $target $BACKUP_DIR
+        cp -rL $target $BACKUP_DIR
     fi
 done
 
 typeset -a files=($HOME/.config/nvim $HOME/.vim $HOME/.vimrc)
 for file in $files; do
     if [ -e $file ]; then
-        cp -rf $file $BACKUP_DIR
+        cp -rfL $file $BACKUP_DIR
     fi
 done
