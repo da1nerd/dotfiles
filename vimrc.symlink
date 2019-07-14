@@ -1,4 +1,7 @@
 set nocompatible    " get rid of Vi compatibility mode.
+set nomodeline " There is a security hole in there
+set undofile " Maintain undo history between session
+set undodir=~/.vim-tmp/undodir " Stores undo history on global dir
 
 " Section Plugins {{{
 call plug#begin('~/.config/nvim/plugged')
