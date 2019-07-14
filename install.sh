@@ -62,7 +62,6 @@ echo "Creating bin directories"
 mkdir -p ~/bin
 
 echo "Configuring zsh as default shell"
-echo "You may need to run this again without being sudo in order for it to work"
 chsh -s $(which zsh)
 touch ~/.zshrc
 echo "# Automatically added by dotfiles" >> ~/.zshrc
@@ -70,6 +69,7 @@ echo "source $DOTFILES/zsh/zshrc.bootstrap" >> ~/.zshrc
 
 echo "Done."
 echo "Finish with 'vim +PlugInstall' to set up vim"
+echo "You may need to log out in order for all changes to take effect."
 
 # Display some fun system information
 neofetch
