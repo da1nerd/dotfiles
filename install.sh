@@ -79,6 +79,9 @@ touch ~/.zshrc
 echo "# Automatically added by dotfiles" >> ~/.zshrc
 echo "source $DOTFILES/zsh/zshrc.bootstrap" >> ~/.zshrc
 
+# install nvm for node
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | zsh
+
 echo "Done."
 echo "Finish with 'vim +PlugInstall' to set up vim"
 echo "You may need to log out in order for all changes to take effect."
