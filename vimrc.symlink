@@ -9,6 +9,8 @@ call plug#begin('~/.config/nvim/plugged')
 " colorschemes
 Plug 'chriskempson/base16-vim'
 
+" save files when not editing as sudo
+cnoremap w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit!
 
 " utilities
 Plug 'ctrlpvim/ctrlp.vim' " fuzzy file finder, mapped to <leader>t
