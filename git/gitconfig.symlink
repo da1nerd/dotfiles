@@ -1,7 +1,7 @@
 # gitconfig
 [user]
-    name = Joel Lonbeck
-    email = joel@neutrinographics.com
+	name = Joel
+	email = joel@neutrinographics.com
 	signingkey = AD4FD52
 [github]
     user = neutrinog

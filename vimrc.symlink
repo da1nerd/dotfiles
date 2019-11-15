@@ -47,6 +47,8 @@ let g:mapleader = ','
 set history=1000 " change history to 1000
 set textwidth=120
 
+" Enable Google search
+set keywordprg=google
 
 " Tab control
 set noexpandtab " insert tabs rather than spaces for <Tab>
