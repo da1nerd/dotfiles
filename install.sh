@@ -41,7 +41,7 @@ elif [ "$(uname -s)" == "Linux" ]; then
 	# sudo apt-get -y install php7.0 php7.0-fpm php7.0-mysql php7.0-mbstring
 	# sudo apt-get -y install nginx
 	# curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
-	sudo apt-get -y install nodejs
+	# sudo apt-get -y install nodejs
 	sudo apt-get -y install yarn
 	sudo apt-get -y install resilio-sync
 	sudo apt-get -y autoremove
@@ -81,7 +81,7 @@ echo "source $DOTFILES/zsh/zshrc.bootstrap" >> ~/.zshrc
 
 echo "Installing Node Version Manager (nvm)"
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | zsh
-echo "You can now install node with \"nvm install node\""
+echo "Installing the latest version of node for you"
 
 echo "Done."
 echo "Finish with 'vim +PlugInstall' to set up vim"
