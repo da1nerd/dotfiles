@@ -53,6 +53,7 @@ save | restore )
   $1
   ;;
 * )
+  echo "*tmux session*"
   echo "valid commands: save, restore" >&2
   exit 1
 esac
