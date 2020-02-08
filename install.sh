@@ -27,6 +27,7 @@ elif [ "$(uname -s)" == "Linux" ]; then
 	curl -LO http://linux-packages.resilio.com/resilio-sync/key.asc && sudo apt-key add ./key.asc
 
 	sudo apt-get update
+	sudo apt-get -y install ack
 	sudo apt-get -y install ruby
 	sudo apt-get -y install neofetch
 	sudo apt-get -y install ruby-dev

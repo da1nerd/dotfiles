@@ -1,2 +1,2 @@
 #!/bin/bash
-google-chrome-stable http://www.google.com/search?q=$1 > /dev/null 2>&1 &
+google-chrome-stable http://www.google.com/search?q="$*" > /dev/null 2>&1 &

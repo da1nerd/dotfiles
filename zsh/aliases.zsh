@@ -35,8 +35,8 @@ alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
 alias localip="hostname -I"
 
 # View HTTP traffic
-alias sniff="sudo ngrep -d 'enp2s0' -t '^(GET|POST) ' 'tcp and port 80'"
-alias httpdump="sudo tcpdump -i enp2s0 -n -s 0 -w - | grep -a -o -E \"Host\: .*|GET \/.*\""
+alias sniff="sudo ngrep -d 'wlp0s20f3' -t '^(GET|POST) ' 'tcp and port 80'"
+alias httpdump="sudo tcpdump -i wlp0s20f3 -n -s 0 -w - | grep -a -o -E \"Host\: .*|GET \/.*\""
 
 # Recursively delete `.DS_Store` files
 alias cleanup="find . -name '*.DS_Store' -type f -ls -delete"

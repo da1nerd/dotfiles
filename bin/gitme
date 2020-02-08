@@ -4,7 +4,7 @@ BASE_DIR=~/git
 
 set -e
 
-echo "this tool will clone a Github repo into your ~/git folder" 
+echo "this tool will clone a Github repo into your ~/git folder"
 
 if [[ $# -lt 1 ]]
 then

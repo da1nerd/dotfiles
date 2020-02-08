@@ -1,2 +1,2 @@
 #!/bin/bash
-brave-browser https://www.duckduckgo.com?q=$1 > /dev/null 2>&1 &
+brave-browser https://www.duckduckgo.com?q="$*" > /dev/null 2>&1 &
