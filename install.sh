@@ -45,6 +45,7 @@ elif [ "$(uname -s)" == "Linux" ]; then
 	# sudo apt-get -y install nodejs
 	sudo apt-get -y install yarn
 	sudo apt-get -y install resilio-sync
+	sudo apt-get -y install snapd
 	sudo apt-get -y autoremove
 
 	# Configure sync
