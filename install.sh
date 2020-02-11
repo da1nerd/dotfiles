@@ -87,6 +87,7 @@ echo "Installing the latest version of node for you"
 echo "Done."
 echo "Finish with 'vim +PlugInstall' to set up vim"
 echo "You may need to log out in order for all changes to take effect."
+echo "You can install additional software by running $DOTFILES/install/software.sh"
 
 # Display some fun system information
 neofetch
