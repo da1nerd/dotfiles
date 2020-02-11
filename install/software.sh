@@ -21,9 +21,12 @@ echo "Installing Mailspring"
 sudo snap install mailspring
 
 echo "Installing NordVPN"
+# This link will need to be updated from time to time
 curl https://repo.nordvpn.com/deb/nordvpn/debian/pool/main/nordvpn-release_1.0.0_all.deb -o nordvpn.deb
 sudo apt install nordvpn.deb
 rm nordvpn.deb
 
 echo "Installing Crystal-lang"
 sudo snap install crystal --classic
+
+# TODO: also install: typora, brave, zulip, toptal tracker
