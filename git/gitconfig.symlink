@@ -8,6 +8,8 @@
 [init]
     templatedir = ~/.dotfiles/git/templates
 [alias]
+	# show file sizes from history
+	bloat = "! ~/.dotfiles/git/bloat.sh"
 	# show age of files since last touched
 	age = "! ~/.dotfiles/git/gitage.sh"
     # list all aliases
