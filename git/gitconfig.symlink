@@ -1,17 +1,19 @@
 # gitconfig
 [user]
 	name = Joel
-	email = joel@neutrinographics.com
+	email = da1nerd@pm.me
 	signingkey = AD4FD52
 [github]
-    user = neutrinog
+	user = da1nerd
 [init]
     templatedir = ~/.dotfiles/git/templates
+	defaultBranch = main
 [alias]
 	# show file sizes from history
 	bloat = "! ~/.dotfiles/git/bloat.sh"
 	# show age of files since last touched
 	age = "! ~/.dotfiles/git/gitage.sh"
+	branch-age = "! ~/.dotfiles/git/git_branch_age.sh"
     # list all aliases
     la = "!git config -l | grep alias | cut -c 7-"
     delete-merged-branches = "!f() { git checkout --quiet master && git branch --merged | grep --invert-match '\\*' | xargs -n 1 git branch --delete; git checkout --quiet @{-1}; }; f"
@@ -152,3 +154,5 @@
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
 	required = true
+[credential]
+	helper = store
