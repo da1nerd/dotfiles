@@ -1,7 +1,4 @@
 #! /bin/bash
 
-eval "$(
-     git for-each-ref --shell --format \
-     "git --no-pager log -1 --date=iso --format='%%ad '%(align:left,25)%(refname:short)%(end)' %%h %%s' \$(git merge-base %(refname:short) master);" \
-    refs/heads
-)" | sort
+git for-each-ref --sort=committerdate refs/heads/ --format='%(HEAD) %(color:green)%(refname:short)%(color:reset) - %(color:red)%(objectname:short)%(color:reset) - %(authorname) (%(color:green)%(committerdate:relative)%(color:reset))'
+
