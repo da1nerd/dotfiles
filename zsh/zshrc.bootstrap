@@ -53,8 +53,8 @@ fi
 
 # add asdf
 if [[ -d ~/.asdf ]]; then
-	chmod +x ~/.asdf/asdf.sh
-	~/.asdf/asdf.sh
+	. $HOME/.asdf/asdf.sh
+	. $HOME/.asdf/completions/asdf.bash
 fi
 
 # add mysql
@@ -126,10 +126,6 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-# configure asdf
-. $HOME/.asdf/asdf.sh
-. $HOME/.asdf/completions/asdf.bash
-
 # add paths to node
 export PATH=$HOME/.node/bin:$PATH
 NPM_PACKAGES="$HOME/.npm-packages"
@@ -143,12 +139,3 @@ fi
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
-# added by travis gem
-[ -f ~/.travis/travis.sh ] && source ~/.travis/travis.sh
-
-# tabtab source for electron-forge package
-# uninstall by removing these lines or running `tabtab uninstall electron-forge`
-[[ -f ~/.node/lib/node_modules/electron-forge/node_modules/tabtab/.completions/electron-forge.zsh ]] && . ~/.node/lib/node_modules/electron-forge/node_modules/tabtab/.completions/electron-forge.zsh
-
-# added by travis gem
-[ -f /home/joel/.travis/travis.sh ] && source /home/joel/.travis/travis.sh
