@@ -51,6 +51,12 @@ if [[ -d ~/git/flutter ]]; then
 	export PATH=~/git/flutter/flutter/bin:$PATH
 fi
 
+# add asdf
+if [[ -d ~/.asdf ]]; then
+	chmod +x ~/.asdf/asdf.sh
+	~/.asdf/asdf.sh
+fi
+
 # add mysql
 if [[ -d /usr/local/mysql/bin ]]; then
 	export PATH=/usr/local/mysql/bin:$PATH
@@ -107,8 +113,10 @@ fi
 [ -f ~/.travis/travis.sh ] && source ~/.travis/travis.sh
 
 # add java path
-export JAVA_HOME=$(ls -d /usr/lib/jvm/* | grep "[0-9]\+$" | sort --version-sort | tail -n 1)
-export PATH=$PATH:$JAVA_HOME/bin
+if [[ -d /usr/lib/jvm ]]; then
+	export JAVA_HOME=$(ls -d /usr/lib/jvm/* | grep "[0-9]\+$" | sort --version-sort | tail -n 1)
+	export PATH=$PATH:$JAVA_HOME/bin
+fi
 
 # disable caps lock in favor of ctrl
 setxkbmap -option ctrl:nocaps
