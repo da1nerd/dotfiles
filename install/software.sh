@@ -6,20 +6,12 @@ sudo apt install ./keybase_amd64.deb
 rm keybase_amd64.deb
 run_keybase
 
-echo "Installing Atom"
-curl -L https://atom.io/download/deb -o atom_amd64.deb
-sudo apt install ./atom_amd64.deb
-rm atom-amd64.deb
-
 echo "Installing Visual Studio Code"
 # This link will need to be updated from time to time
 curl -L https://go.microsoft.com/fwlink/?LinkID=760868 -o code_amd64.deb
 sudo apt install ./code_amd64.deb
 rm code_amd64.deb
 # TODO: install settings sync as well and configure it with initial settings.
-
-echo "Installing Mailspring"
-sudo snap install mailspring
 
 echo "Installing NordVPN"
 # This link will need to be updated from time to time
@@ -34,6 +26,6 @@ git checkout "$(git describe --abbrev=0 --tags)"
 
 echo "Installing Crystal-lang"
 asdf plugin add crystal
-asdf install crystal 0.35.1
+asdf install crystal 1.2.2
 
 # TODO: also install: typora, brave
