@@ -84,7 +84,8 @@ echo "source $DOTFILES/zsh/zshrc.bootstrap" >> ~/.zshrc
 echo "Installing Node Version Manager (nvm)"
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | zsh
 echo "Installing the latest version of node for you"
-
+nvm install --lts
+nvm install --latest-npm
 echo "Done."
 echo "Finish with 'vim +PlugInstall' to set up vim"
 echo "You may need to log out in order for all changes to take effect."
