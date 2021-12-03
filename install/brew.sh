@@ -2,35 +2,21 @@
 
 if test ! $(which brew); then
     echo "Installing homebrew"
-    ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 
-echo -e "\n\nInstalling homebrew packages..."
-echo "=============================="
+if test ! $(which wget); then
+    brew install wget
+fi
 
-# cli tools
-brew install ack
-brew install tree
-brew install wget
+if test ! $(which git); then
+    brew install git
+fi
 
-# development server setup
-brew install nginx
-brew install dnsmasq
+if test ! $(which zsh); then
+    brew install zsh
+fi
 
-# development tools
-brew install git
-#brew install hub
-brew install macvim --override-system-vim
-brew install reattach-to-user-namespace
-brew install tmux
-brew install zsh
-brew install highlight
-brew install nvm
-brew install z
-brew install markdown
-brew install yarn
-
-# install neovim
-#brew install neovim/neovim/neovim
-
-#exit 0
+if test ! $(which nvm); then
+    brew install nvm
+fi

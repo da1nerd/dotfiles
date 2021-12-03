@@ -63,14 +63,17 @@ elif [ "$(uname -s)" == "Linux" ]; then
 	# echo "You need to change the php7.0 user and group to your username"
 	# echo "edit /etc/php/7.0/fpm/pool.d/www.conf"
 
+	echo "Installing Node Version Manager (nvm)"
+	curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | zsh
+
+	echo "Creating vim directories"
+	mkdir -p ~/.vim-tmp
+
 	echo "Disabling Caps Lock in favor of CTRL"
 	setxkbmap -option ctrl:nocaps
 else
 	echo -e "\n\nOnly Linux and OSX are supported."
 fi
-
-echo "Creating vim directories"
-mkdir -p ~/.vim-tmp
 
 echo "Creating bin directories"
 mkdir -p ~/bin
@@ -81,15 +84,17 @@ touch ~/.zshrc
 echo "# Automatically added by dotfiles" >> ~/.zshrc
 echo "source $DOTFILES/zsh/zshrc.bootstrap" >> ~/.zshrc
 
-echo "Installing Node Version Manager (nvm)"
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | zsh
 echo "Installing the latest version of node for you"
-nvm install --lts
-nvm install --latest-npm
-echo "Done."
-echo "Finish with 'vim +PlugInstall' to set up vim"
-echo "You may need to log out in order for all changes to take effect."
-echo "You can install additional software by running $DOTFILES/install/software.sh"
+nvm install stable
+nvm alias default stable
 
-# Display some fun system information
-neofetch
+echo "Done."
+
+if [ "$(uname -s)" == "Linux" ]; then
+	echo "Finish with 'vim +PlugInstall' to set up vim"
+	echo "You may need to log out in order for all changes to take effect."
+	echo "You can install additional software by running $DOTFILES/install/software.sh"
+
+	# Display some fun system information
+	neofetch
+fi
