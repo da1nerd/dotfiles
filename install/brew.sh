@@ -16,7 +16,3 @@ fi
 if test ! $(which zsh); then
     brew install zsh
 fi
-
-if test ! $(which nvm); then
-    brew install nvm
-fi
