@@ -16,3 +16,7 @@ fi
 if test ! $(which zsh); then
     brew install zsh
 fi
+
+if test ! $(which ack); then
+    brew install ack
+fi
