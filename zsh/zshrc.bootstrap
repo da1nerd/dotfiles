@@ -119,7 +119,9 @@ if [[ -d /usr/lib/jvm ]]; then
 fi
 
 # disable caps lock in favor of ctrl
-setxkbmap -option ctrl:nocaps
+if [[ `uname` == 'Linux' ]]; then
+	setxkbmap -option ctrl:nocaps
+fi
 
 # configure nvm.
 export NVM_DIR="$HOME/.nvm"
