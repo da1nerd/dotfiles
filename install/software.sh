@@ -19,6 +19,6 @@ git checkout "$(git describe --abbrev=0 --tags)"
 
 echo "Installing Crystal-lang"
 asdf plugin add crystal
-asdf install crystal 1.2.2
+asdf install crystal latest
 
 # TODO: also install: typora, brave
