@@ -69,8 +69,8 @@ elif [ "$(uname -s)" == "Linux" ]; then
 	echo "Creating vim directories"
 	mkdir -p ~/.vim-tmp
 
-	echo "Disabling Caps Lock in favor of CTRL"
-	setxkbmap -option ctrl:nocaps
+#	echo "Disabling Caps Lock in favor of CTRL"
+#	setxkbmap -option ctrl:nocaps
 else
 	echo -e "\n\nOnly Linux and OSX are supported."
 fi
