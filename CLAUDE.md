@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository purpose
 
-Personal dotfiles repo for zsh, vim/neovim, tmux, and related config. Forked from nicknisi/dotfiles. Supports both macOS and Linux (primary target for this checkout is Linux — see `uname` branches throughout).
+Personal dotfiles repo for zsh, vim, tmux, and related config. Forked from nicknisi/dotfiles. Supports both macOS and Linux (primary target for this checkout is Linux — see `uname` branches throughout).
 
 ## Installation and linking model
 
