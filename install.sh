@@ -2,6 +2,26 @@
 DOTFILES=$HOME/.dotfiles
 NVM_VERSION=v0.40.1
 
+# Preflight: ensure git and curl are present. Needed for submodule init,
+# resilio GPG key fetch, starship + nerd-font downloads, and the nvm /
+# antidote clones. Safety net in case the user skipped the README prereqs.
+missing=()
+command -v git >/dev/null || missing+=(git)
+command -v curl >/dev/null || missing+=(curl)
+if [ ${#missing[@]} -gt 0 ]; then
+	echo "Installing missing prereqs: ${missing[*]}"
+	if [ "$(uname -s)" == "Linux" ] && command -v apt-get >/dev/null; then
+		sudo apt-get update
+		sudo apt-get -y install "${missing[@]}"
+	elif [ "$(uname -s)" == "Darwin" ]; then
+		echo "On macOS, run 'xcode-select --install' for git, then re-run this script."
+		exit 1
+	else
+		echo "Install them manually, then re-run."
+		exit 1
+	fi
+fi
+
 echo -e "Installing dotfiles\n"
 
 echo "Initializing submodule(s)"

@@ -12,16 +12,28 @@ Welcome to my world. This is a collection of vim, tmux, and zsh configurations. 
 
 ## Initial Setup and Installation
 
-If on OSX, you will need to install the XCode CLI tools before continuing. To do so, open a terminal and type
+### Prerequisites
+
+**macOS** — install the Xcode CLI tools (provides git):
 
 ```bash
 xcode-select --install
 ```
 
-Then, clone the dotfiles repository to your computer. This can be placed anywhere, and symbolic links will be created to reference it from your home directory.
+**Linux (Pop!_OS / Debian / Ubuntu)** — install git and curl:
 
 ```bash
-git clone https://github.com/nicknisi/dotfiles.git ~/.dotfiles
+sudo apt install -y git curl
+```
+
+If you skip this step, `install.sh` will try to install them itself on Linux, or prompt you to run `xcode-select --install` on macOS.
+
+### Install
+
+Clone the repo (anywhere — symlinks reference it from `$HOME`) and run the installer:
+
+```bash
+git clone https://github.com/da1nerd/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
 ./install.sh
 ```
