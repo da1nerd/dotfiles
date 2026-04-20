@@ -16,7 +16,7 @@ Personal dotfiles repo for zsh, vim, tmux, and related config. Forked from nickn
 4. On Linux: installs apt packages (zsh, tmux, vim, build-essential, resilio-sync, etc.), creates `~/.vim-tmp`, installs starship via the official curl script.
 5. Always (both platforms): creates `~/bin`, clones nvm, clones antidote, guarded by existence checks (idempotent); `chsh` to zsh (if not already), appends `source $DOTFILES/zsh/zshrc.bootstrap` to `~/.zshrc` (if not already there), runs `nvm install stable`.
 
-`install/software.sh` is a separate, manually-run script for optional tools (VS Code, asdf, Crystal) — not called from `install.sh`. Invoke directly when you want those tools.
+Optional tools live in `extras/` (asdf, crystal, docker, fly, kvm, python, ruby, rust, vscode). Each is a self-contained, idempotent install script. Run `./extras/<tool>` to install one; `extras/README.md` lists what's available. Not called from `install.sh`.
 
 When adding a new dotfile, name it `<name>.symlink` (or put a directory in `.config/`) and `install/link.sh` handles it automatically — no script edits needed.
 
