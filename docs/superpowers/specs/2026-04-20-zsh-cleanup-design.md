@@ -183,12 +183,15 @@ is never called elsewhere.
 ### `zsh/.zsh_plugins.txt` — new file
 
 ```
-zsh-users/zsh-syntax-highlighting
 zsh-users/zsh-autosuggestions
 zsh-users/zsh-history-substring-search
+zsh-users/zsh-syntax-highlighting
 ```
 
-One repo per line, antidote's plain-text format.
+One repo per line, antidote's plain-text format. Order matters: per the
+`zsh-syntax-highlighting` README, it must load last because it wraps ZLE
+widgets and needs to see the final state set up by other plugins that also
+wrap widgets (autosuggestions, history-substring-search).
 
 ### `install.sh` — additions (Linux branch + after-branch)
 
