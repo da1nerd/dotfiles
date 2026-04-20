@@ -6,7 +6,6 @@
 [github]
 	user = da1nerd
 [init]
-    templatedir = ~/.dotfiles/git/templates
 	defaultBranch = main
 [alias]
 	# show file sizes from history
