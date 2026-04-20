@@ -24,3 +24,7 @@ fi
 if test ! $(which starship); then
     brew install starship
 fi
+
+if ! brew list --cask font-jetbrains-mono-nerd-font &>/dev/null; then
+    brew install --cask font-jetbrains-mono-nerd-font
+fi

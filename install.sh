@@ -40,6 +40,7 @@ elif [ "$(uname -s)" == "Linux" ]; then
 		ruby-dev \
 		snapd \
 		tmux \
+		unzip \
 		vim-gui-common \
 		vim-runtime \
 		xclip \
@@ -49,6 +50,17 @@ elif [ "$(uname -s)" == "Linux" ]; then
 	# starship prompt (not in Pop!_OS apt)
 	if ! command -v starship >/dev/null; then
 		curl -sS https://starship.rs/install.sh | sh -s -- --yes
+	fi
+
+	# JetBrainsMono Nerd Font (for starship glyphs)
+	if [ ! -f ~/.local/share/fonts/JetBrainsMonoNerdFont-Regular.ttf ]; then
+		echo "Installing JetBrainsMono Nerd Font"
+		mkdir -p ~/.local/share/fonts
+		curl -fsSL -o /tmp/JetBrainsMono.zip \
+			https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip
+		unzip -qo /tmp/JetBrainsMono.zip -d ~/.local/share/fonts/
+		rm /tmp/JetBrainsMono.zip
+		fc-cache -f
 	fi
 
 	# Configure resilio sync
