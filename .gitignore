@@ -5,4 +5,6 @@ plug.vim.old
 vim.symlink/spell/
 vim.symlink/plugged/
 
+zsh/.zsh_plugins.zsh
+
 .claude/
