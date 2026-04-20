@@ -46,6 +46,11 @@ elif [ "$(uname -s)" == "Linux" ]; then
 		zsh
 	sudo apt-get -y autoremove
 
+	# starship prompt (not in Pop!_OS apt)
+	if ! command -v starship >/dev/null; then
+		curl -sS https://starship.rs/install.sh | sh -s -- --yes
+	fi
+
 	# Configure resilio sync
 	sudo systemctl enable resilio-sync
 	sudo usermod -aG $USER rslsync
@@ -63,6 +68,12 @@ if [ ! -d ~/.nvm ]; then
 	echo "Installing Node Version Manager (nvm) $NVM_VERSION"
 	git clone https://github.com/nvm-sh/nvm.git ~/.nvm
 	(cd ~/.nvm && git checkout "$NVM_VERSION")
+fi
+
+# Install antidote plugin manager (idempotent; shared between macOS and Linux)
+if [ ! -d ~/.antidote ]; then
+	echo "Installing antidote"
+	git clone --depth 1 https://github.com/mattmc3/antidote.git ~/.antidote
 fi
 
 echo "Creating bin directories"

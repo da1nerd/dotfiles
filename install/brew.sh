@@ -20,3 +20,7 @@ fi
 if test ! $(which ack); then
     brew install ack
 fi
+
+if test ! $(which starship); then
+    brew install starship
+fi
