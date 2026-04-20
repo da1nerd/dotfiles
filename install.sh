@@ -25,7 +25,14 @@ fi
 echo -e "Installing dotfiles\n"
 
 echo "Initializing submodule(s)"
-git -C $DOTFILES submodule update --init --recursive
+if [ -d "$DOTFILES/.git" ]; then
+	git -C "$DOTFILES" submodule update --init --recursive
+elif [ ! -d "$DOTFILES/.config/base16-shell/scripts" ]; then
+	echo "(Not a git checkout — cloning base16-shell manually)"
+	rm -rf "$DOTFILES/.config/base16-shell"
+	git clone --depth 1 https://github.com/chriskempson/base16-shell.git \
+		"$DOTFILES/.config/base16-shell"
+fi
 
 source $DOTFILES/install/link.sh
 
