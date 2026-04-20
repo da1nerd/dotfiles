@@ -67,7 +67,7 @@ fi
 # Java
 if [[ -d /usr/lib/jvm ]]; then
     export JAVA_HOME=$(ls -d /usr/lib/jvm/* | grep "[0-9]\+$" | sort --version-sort | tail -n 1)
-    path=($path $JAVA_HOME/bin)
+    [[ -d $JAVA_HOME/bin ]] && path=($path $JAVA_HOME/bin)
 fi
 
 # Linux-only aliases
