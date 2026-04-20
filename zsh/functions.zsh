@@ -28,27 +28,6 @@ function f() {
     find . -name "$1"
 }
 
-function ng-stop() {
-    sudo launchctl stop homebrew.mxcl.nginx
-}
-
-function ng-start() {
-    sudo launchctl start homebrew.mxcl.nginx
-}
-function ng-restart() {
-     sudo launchctl start homebrew.mxcl.nginx
-}
-
-
-# Start an HTTP server from a directory, optionally specifying the port
-function server() {
-    local port="${1:-8000}"
-    open "http://localhost:${port}/"
-    # Set the default Content-Type to `text/plain` instead of `application/octet-stream`
-    # And serve everything as UTF-8 (although not technically correct, this doesn’t break anything for binary files)
-    python -c $'import SimpleHTTPServer;\nmap = SimpleHTTPServer.SimpleHTTPRequestHandler.extensions_map;\nmap[""] = "text/plain";\nfor key, value in map.items():\n\tmap[key] = value + ";charset=UTF-8";\nSimpleHTTPServer.test();' "$port"
-}
-
 # take this repo and copy it to somewhere else minus the .git stuff.
 function gitexport(){
     mkdir -p "$1"
@@ -101,23 +80,6 @@ function extract() {
     else
         echo "'$1' is not a valid file"
     fi
-}
-
-# syntax highlight the contents of a file or the clipboard and place the result on the clipboard
-function hl() {
-    if [ -z "$3" ]; then
-        src=$( pbpaste )
-    else
-        src=$( cat $3 )
-    fi
-
-    if [ -z "$2" ]; then
-        style="moria"
-    else
-        style="$2"
-    fi
-
-    echo $src | highlight -O rtf --syntax $1 --font Inconsoloata --style $style --line-number --font-size 24 | pbcopy
 }
 
 # set the background color to light

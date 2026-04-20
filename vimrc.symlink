@@ -297,29 +297,6 @@ nmap <leader>ge :Gedit<cr>
 nmap <silent><leader>gr :Gread<cr>
 nmap <silent><leader>gb :Gblame<cr>
 
-nmap <leader>m :MarkedOpen!<cr>
-nmap <leader>mq :MarkedQuit<cr>
-
-" toggle Limelight
-nmap <leader>f :Limelight!!<cr>
-
-let g:neomake_javascript_jshint_maker = {
-    \ 'args': ['--verbose'],
-    \ 'errorformat': '%A%f: line %l\, col %v\, %m \(%t%*\d\)',
-\ }
-
-let g:neomake_typescript_tsc_maker = {
-    \ 'args': ['-m', 'commonjs', '--noEmit' ],
-    \ 'append_file': 0,
-    \ 'errorformat':
-        \ '%E%f %#(%l\,%c): error %m,' .
-        \ '%E%f %#(%l\,%c): %m,' .
-        \ '%Eerror %m,' .
-        \ '%C%\s%\+%m'
-\ }
-
-autocmd FileType javascript let g:neomake_javascript_enabled_makers = findfile('.jshintrc', '.;') != '' ? ['jshint'] : ['eslint']
-
 " CtrlP ignore patterns
 " let g:ctrlp_custom_ignore = {
 "             \ 'dir': '\.git$\|node_modules$\|bower_components$\|\.hg$\|\.svn$',
@@ -340,16 +317,11 @@ let g:airline_theme='base16'
 let g:vim_json_syntax_conceal = 0
 
 
-let g:SuperTabCrMapping = 0
-
 if (has("gui_running"))
     set guioptions=egmrt
-    set background=light
-    colorscheme solarized
     let g:airline_left_sep=''
     let g:airline_right_sep=''
     let g:airline_powerline_fonts=0
-    let g:airline_theme='solarized'
 endif
 
 call ApplyLocalSettings(expand('.'))

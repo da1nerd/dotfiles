@@ -77,7 +77,6 @@ export PATH
 [ -z "$TMUX" ] && export TERM=xterm-256color
 
 # Add aliases
-alias vim=vi
 if [[ `uname` == 'Linux' ]]; then
     alias open=nautilus
 	alias xclip="xclip -selection c"

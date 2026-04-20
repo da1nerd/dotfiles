@@ -12,7 +12,7 @@ for hook in $hooks/*.$hook_type; do
 	if [ -e "${hook}" ]
 	then
 		echo ""
-		echo "${COLOR_LIGHTPURPLE}Executing ${hook}${COLOR_NONE}"
+		echo "Executing ${hook}"
 		${hook}
 		EXIT_CODE=$((${EXIT_CODE} + $?))
 	fi
@@ -20,7 +20,7 @@ done
 
 if [ ${EXIT_CODE} -ne 0 ]; then
 	echo ""
-	echo "${COLOR_RED}Commit Failed.${COLOR_NONE}"
+	echo "Commit Failed."
 fi
 
 exit $((${EXIT_CODE}))
