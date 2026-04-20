@@ -107,12 +107,25 @@ echo "Installing the latest version of node"
 nvm install stable
 nvm alias default stable
 
-echo "Done."
-echo "Finish with 'vim +PlugInstall' to set up vim"
-echo "You may need to log out in order for all changes to take effect."
-
-# Display some fun system information
+# Display some fun system information (Linux only)
 if [ "$(uname -s)" == "Linux" ]; then
-	echo "You can install additional software by running $DOTFILES/install/software.sh"
 	neofetch
 fi
+
+echo ""
+echo "Dotfiles installation complete."
+echo ""
+echo "Next steps to finish your setup:"
+echo ""
+echo "  1. Log out and back in for the zsh shell change to take effect."
+echo "  2. Install vim plugins:  vim +PlugInstall"
+echo "  3. Set your terminal emulator font to 'JetBrainsMono Nerd Font Mono'"
+echo "     (required for starship's git branch / status glyphs to render)."
+if [ "$(uname -s)" == "Linux" ]; then
+	echo "  4. Configure caps-lock-as-Ctrl via Pop!_OS keyboard settings"
+	echo "     (System Settings → Keyboard, or install gnome-tweaks)."
+	echo ""
+	echo "Optional:"
+	echo "  - Run $DOTFILES/install/software.sh for VS Code, asdf, Crystal."
+fi
+echo ""
