@@ -35,7 +35,10 @@ for _d in $fpath; do [[ -d $_d ]] && _valid_fpath+=($_d); done
 fpath=($_valid_fpath)
 unset _valid_fpath _d
 autoload -U compinit
-compinit
+# -u: don't prompt on insecure dirs. The filter above removes missing
+# entries; chmod on ~/.antidote handles our own install. Anything the
+# system drops into fpath is system-managed and not worth nagging about.
+compinit -u
 
 # Plugins (antidote)
 if [[ -s ~/.antidote/antidote.zsh ]]; then
