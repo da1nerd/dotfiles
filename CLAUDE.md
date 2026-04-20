@@ -48,7 +48,7 @@ Most scripts branch on `uname` or `$(uname -s)`. When editing cross-platform cod
 
 ## Scripts in `bin/`
 
-`bin/` is prepended to PATH. Notable: `tm`/`tms` (tmux session helpers), `gitme`, `vh` (vhost helper), `battery_indicator.sh`. These are user-facing commands, not build tooling.
+`bin/` is prepended to PATH. Notable: `gitme` (clone a github repo into `~/git/`). These are user-facing commands, not build tooling.
 
 ## No build / test / lint
 
