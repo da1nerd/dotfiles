@@ -51,12 +51,6 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
-# Node global packages
-NPM_PACKAGES="$HOME/.npm-packages"
-[[ -d $NPM_PACKAGES/bin ]] && path=($NPM_PACKAGES/bin $path)
-[[ -d $NPM_PACKAGES/share/man ]] && export MANPATH="$NPM_PACKAGES/share/man"
-[[ -d $NPM_PACKAGES/lib/node_modules ]] && export NODE_PATH="$NPM_PACKAGES/lib/node_modules:$NODE_PATH"
-
 # Android SDK
 if [[ -d ~/Android/Sdk ]]; then
     export ANDROID_HOME=~/Android/Sdk
