@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+# claude — Claude Code CLI + superpowers plugin declaration
+set -e
+
+# Install Claude Code
+if command -v claude >/dev/null; then
+    echo "Claude Code already installed: $(command -v claude)"
+else
+    case "$(uname -s)" in
+        Linux)
+            echo "Installing Claude Code via official installer"
+            curl -fsSL https://claude.ai/install.sh | bash
+            ;;
+        Darwin)
+            if command -v brew >/dev/null; then
+                brew install --cask claude-code
+            else
+                echo "Installing Claude Code via official installer"
+                curl -fsSL https://claude.ai/install.sh | bash
+            fi
+            ;;
+        *)
+            echo "Unsupported platform." >&2
+            exit 1
+            ;;
+    esac
+fi
+
+# Declare the superpowers plugin in user-level settings so Claude Code
+# prompts to trust + install it on next launch. Non-destructive: writes
+# only when settings.json doesn't exist or doesn't already mention
+# superpowers.
+SETTINGS=~/.claude/settings.json
+mkdir -p ~/.claude
+
+if [ ! -f "$SETTINGS" ]; then
+    echo "Writing $SETTINGS with superpowers declaration"
+    cat > "$SETTINGS" <<'JSON'
+{
+  "extraKnownMarketplaces": {
+    "claude-plugins-official": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/claude-plugins-official"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "superpowers@claude-plugins-official": true
+  }
+}
+JSON
+elif grep -q 'superpowers@claude-plugins-official' "$SETTINGS"; then
+    echo "superpowers already declared in $SETTINGS"
+else
+    echo ""
+    echo "$SETTINGS already exists. To enable superpowers, run these"
+    echo "inside any Claude Code session:"
+    echo "  /plugin marketplace add anthropics/claude-plugins-official"
+    echo "  /plugin install superpowers@claude-plugins-official"
+fi
+
+echo ""
+echo "Done. On first 'claude' launch, accept the trust prompt to complete"
+echo "the superpowers install."

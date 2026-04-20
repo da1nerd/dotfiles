@@ -16,6 +16,7 @@ For example:
 | Script    | Description                                           |
 |-----------|-------------------------------------------------------|
 | `asdf`    | Multi-language version manager                        |
+| `claude`  | Claude Code CLI + superpowers plugin declaration      |
 | `crystal` | Crystal programming language (via asdf)               |
 | `docker`  | Docker Engine (Linux) / Docker Desktop (macOS)        |
 | `fly`     | Fly.io CLI (flyctl)                                   |
