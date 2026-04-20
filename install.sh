@@ -111,6 +111,9 @@ fi
 if [ ! -d ~/.antidote ]; then
 	echo "Installing antidote"
 	git clone --depth 1 https://github.com/mattmc3/antidote.git ~/.antidote
+	# Strip group/other write bits so zsh compinit doesn't flag the
+	# functions dir as "insecure" under umasks like Pop!_OS's 002.
+	chmod -R go-w ~/.antidote
 fi
 
 echo "Creating bin directories"
