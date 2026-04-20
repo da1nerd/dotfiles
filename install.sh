@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 DOTFILES=$HOME/.dotfiles
+NVM_VERSION=v0.40.1
 
 echo -e "Installing dotfiles\n"
 
@@ -15,37 +16,41 @@ if [ "$(uname -s)" == "Darwin" ]; then
 
 	source $DOTFILES/install/osx.sh
 
-	source $DOTFILES/install/nvm.sh
-
 elif [ "$(uname -s)" == "Linux" ]; then
 	echo -e "\n\nRunning on Linux"
 
-	echo "deb http://linux-packages.resilio.com/resilio-sync/deb resilio-sync non-free" | sudo tee /etc/apt/sources.list.d/resilio-sync.list
-	curl -LO http://linux-packages.resilio.com/resilio-sync/key.asc && sudo apt-key add ./key.asc
+	# resilio-sync apt repository (idempotent)
+	if [ ! -f /etc/apt/keyrings/resilio-sync.gpg ]; then
+		sudo mkdir -p /etc/apt/keyrings
+		curl -fsSL http://linux-packages.resilio.com/resilio-sync/key.asc \
+			| sudo gpg --dearmor -o /etc/apt/keyrings/resilio-sync.gpg
+	fi
+	if [ ! -f /etc/apt/sources.list.d/resilio-sync.list ]; then
+		echo "deb [signed-by=/etc/apt/keyrings/resilio-sync.gpg] http://linux-packages.resilio.com/resilio-sync/deb resilio-sync non-free" \
+			| sudo tee /etc/apt/sources.list.d/resilio-sync.list
+	fi
 
 	sudo apt-get update
-	sudo apt-get -y install ruby
-	sudo apt-get -y install neofetch
-	sudo apt-get -y install ruby-dev
-	sudo apt-get -y install zsh
-	sudo apt-get -y install lm-sensors
-	sudo apt-get -y install xclip
-	sudo apt-get -y install tmux
-	sudo apt-get -y install vim-gui-common
-	sudo apt-get -y install vim-runtime
-	sudo apt-get -y install build-essential
-	sudo apt-get -y install resilio-sync
-	sudo apt-get -y install snapd
+	sudo apt-get -y install \
+		build-essential \
+		lm-sensors \
+		neofetch \
+		resilio-sync \
+		ruby \
+		ruby-dev \
+		snapd \
+		tmux \
+		vim-gui-common \
+		vim-runtime \
+		xclip \
+		zsh
 	sudo apt-get -y autoremove
 
-	# Configure sync
+	# Configure resilio sync
 	sudo systemctl enable resilio-sync
 	sudo usermod -aG $USER rslsync
 	sudo usermod -aG rslsync $USER
 	sudo service resilio-sync start
-
-	echo "Installing Node Version Manager (nvm)"
-	curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | zsh
 
 	echo "Creating vim directories"
 	mkdir -p ~/.vim-tmp
@@ -53,16 +58,29 @@ else
 	echo -e "\n\nOnly Linux and OSX are supported."
 fi
 
+# Install nvm via git clone (idempotent; shared between macOS and Linux)
+if [ ! -d ~/.nvm ]; then
+	echo "Installing Node Version Manager (nvm) $NVM_VERSION"
+	git clone https://github.com/nvm-sh/nvm.git ~/.nvm
+	(cd ~/.nvm && git checkout "$NVM_VERSION")
+fi
+
 echo "Creating bin directories"
 mkdir -p ~/bin
 
-echo "Configuring zsh as default shell"
-chsh -s $(which zsh)
-touch ~/.zshrc
-echo "# Automatically added by dotfiles" >> ~/.zshrc
-echo "source $DOTFILES/zsh/zshrc.bootstrap" >> ~/.zshrc
+if [ "$(basename "$SHELL")" != "zsh" ]; then
+	echo "Configuring zsh as default shell"
+	chsh -s "$(which zsh)"
+fi
 
-echo "Installing the latest version of node for you"
+touch ~/.zshrc
+if ! grep -qF "source $DOTFILES/zsh/zshrc.bootstrap" ~/.zshrc; then
+	echo "# Automatically added by dotfiles" >> ~/.zshrc
+	echo "source $DOTFILES/zsh/zshrc.bootstrap" >> ~/.zshrc
+fi
+
+echo "Installing the latest version of node"
+. ~/.nvm/nvm.sh
 nvm install stable
 nvm alias default stable
 
