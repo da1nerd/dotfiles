@@ -23,4 +23,4 @@ setw -g mode-keys vi
 set -g history-limit 10000
 
 # Shorter escape for vim responsiveness
-set -sg escape-time 10
+set -s escape-time 10
