@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# docker — Docker Engine (Linux) / Docker Desktop (macOS)
+set -e
+
+if command -v docker >/dev/null; then
+    echo "docker already installed: $(command -v docker)"
+    exit 0
+fi
+
+case "$(uname -s)" in
+    Linux)
+        echo "Installing Docker Engine via get.docker.com"
+        curl -fsSL https://get.docker.com | sh
+        sudo usermod -aG docker "$USER"
+        echo ""
+        echo "Docker installed. Log out and back in for the 'docker' group to take effect."
+        ;;
+    Darwin)
+        if ! command -v brew >/dev/null; then
+            echo "Homebrew required. Install via 'install/brew.sh' first." >&2
+            exit 1
+        fi
+        brew install --cask docker
+        echo ""
+        echo "Docker Desktop installed. Launch it from Applications once to finish setup."
+        ;;
+    *)
+        echo "Unsupported platform." >&2
+        exit 1
+        ;;
+esac

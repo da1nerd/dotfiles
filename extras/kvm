@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+# kvm — KVM + QEMU + libvirt + virt-manager (Linux only)
+set -e
+
+case "$(uname -s)" in
+    Linux)
+        if ! command -v apt-get >/dev/null; then
+            echo "This script requires apt (Debian/Ubuntu/Pop!_OS)." >&2
+            exit 1
+        fi
+        echo "Installing KVM + QEMU + libvirt + virt-manager"
+        sudo apt-get update
+        sudo apt-get -y install \
+            qemu-kvm \
+            libvirt-daemon-system \
+            libvirt-clients \
+            bridge-utils \
+            virt-manager \
+            ovmf
+        sudo systemctl enable --now libvirtd
+        sudo usermod -aG libvirt,kvm "$USER"
+        echo ""
+        echo "KVM stack installed. Next steps:"
+        echo "  1. Log out and back in for libvirt/kvm group membership."
+        echo "  2. Verify hardware virtualization is enabled in BIOS: run 'kvm-ok'."
+        echo "     (If 'kvm-ok' is missing, 'sudo apt install cpu-checker')"
+        echo "  3. Launch 'virt-manager' for a GUI."
+        ;;
+    Darwin)
+        echo "KVM is Linux-only. For macOS virtualization, consider UTM:"
+        echo "  brew install --cask utm"
+        exit 0
+        ;;
+    *)
+        echo "Unsupported platform." >&2
+        exit 1
+        ;;
+esac

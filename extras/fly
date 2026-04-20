@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# fly — Fly.io CLI (flyctl)
+set -e
+
+if command -v fly >/dev/null || command -v flyctl >/dev/null; then
+    echo "fly already installed"
+    exit 0
+fi
+
+echo "Installing flyctl"
+curl -L https://fly.io/install.sh | sh
+
+echo ""
+echo "flyctl installed to ~/.fly/. The installer appends a PATH export"
+echo "to your shell rc — open a new shell or 'exec zsh' to pick it up."

@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# vscode — Visual Studio Code editor
+set -e
+
+if command -v code >/dev/null; then
+    echo "VS Code already installed: $(command -v code)"
+    exit 0
+fi
+
+case "$(uname -s)" in
+    Linux)
+        echo "Installing Visual Studio Code"
+        curl -L "https://go.microsoft.com/fwlink/?LinkID=760868" -o /tmp/code_amd64.deb
+        sudo apt install -y /tmp/code_amd64.deb
+        rm /tmp/code_amd64.deb
+        ;;
+    Darwin)
+        if ! command -v brew >/dev/null; then
+            echo "Homebrew required. Install via 'install/brew.sh' first." >&2
+            exit 1
+        fi
+        brew install --cask visual-studio-code
+        ;;
+    *)
+        echo "Unsupported platform." >&2
+        exit 1
+        ;;
+esac

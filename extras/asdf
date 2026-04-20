@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# asdf — multi-language version manager
+set -e
+
+if [ -d ~/.asdf ]; then
+    echo "asdf already installed at ~/.asdf"
+    exit 0
+fi
+
+echo "Installing asdf"
+git clone https://github.com/asdf-vm/asdf.git ~/.asdf
+(cd ~/.asdf && git checkout "$(git describe --abbrev=0 --tags)")
+
+echo "asdf installed. Already wired into zshrc.bootstrap — open a new"
+echo "shell or 'source ~/.asdf/asdf.sh' to start using it."

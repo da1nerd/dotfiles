@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# rust — Rust toolchain (via rustup)
+set -e
+
+if command -v rustup >/dev/null; then
+    echo "rustup already installed. Update with 'rustup update'."
+    exit 0
+fi
+
+echo "Installing Rust via rustup"
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+
+echo ""
+echo "Rust installed to ~/.cargo. Open a new shell or"
+echo "'source ~/.cargo/env' to use it now."
