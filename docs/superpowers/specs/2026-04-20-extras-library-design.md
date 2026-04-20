@@ -145,6 +145,7 @@ fi
 
 echo "Installing latest crystal"
 asdf install crystal latest
+asdf global crystal latest
 ```
 
 ### `extras/docker`
