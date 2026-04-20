@@ -12,11 +12,11 @@ Personal dotfiles repo for zsh, vim/neovim, tmux, and related config. Forked fro
 
 1. Runs `git submodule update --init --recursive` (pulls `.config/base16-shell`).
 2. Sources `install/link.sh`, which is the core symlink mechanism: every file/dir ending in `.symlink` anywhere up to 3 levels deep gets symlinked to `~/.<basename>` (e.g. `vimrc.symlink` → `~/.vimrc`, `vim.symlink` → `~/.vim`). Everything under `.config/` is symlinked into `~/.config/`. Existing targets are skipped, not overwritten.
-3. On macOS: sources `install/brew.sh`, `install/osx.sh`, `install/nvm.sh`.
-4. On Linux: installs apt packages (zsh, tmux, ack, vim, build-essential, resilio-sync, etc.), installs nvm, creates `~/.vim-tmp`.
-5. Always: creates `~/bin`, `chsh` to zsh, appends `source $DOTFILES/zsh/zshrc.bootstrap` to `~/.zshrc`, runs `nvm install stable`.
+3. On macOS: sources `install/brew.sh`, `install/osx.sh`.
+4. On Linux: installs apt packages (zsh, tmux, vim, build-essential, resilio-sync, etc.), creates `~/.vim-tmp`, installs starship via the official curl script.
+5. Always (both platforms): creates `~/bin`, clones nvm, clones antidote, guarded by existence checks (idempotent); `chsh` to zsh (if not already), appends `source $DOTFILES/zsh/zshrc.bootstrap` to `~/.zshrc` (if not already there), runs `nvm install stable`.
 
-`install/software.sh` is a separate, manually-run Linux script for Keybase, VS Code, asdf, Crystal — not called from `install.sh`.
+`install/software.sh` is a separate, manually-run script for optional tools (VS Code, asdf, Crystal) — not called from `install.sh`. Invoke directly when you want those tools.
 
 When adding a new dotfile, name it `<name>.symlink` (or put a directory in `.config/`) and `install/link.sh` handles it automatically — no script edits needed.
 
@@ -24,23 +24,28 @@ When adding a new dotfile, name it `<name>.symlink` (or put a directory in `.con
 
 The `~/.zshrc` created by installation is a one-liner that sources `$DOTFILES/zsh/zshrc.bootstrap`. That file:
 
-- Exports `DOTFILES`, `ZSH=$DOTFILES/zsh`, `CODE_DIR=~/git` (if present — drives the `c` completion).
-- Globs `$ZSH/**/*.zsh` and sources every match. **Order is not controlled** — any file matching `*.zsh` under `zsh/` is loaded, so new config should be drop-in and order-independent.
+- Exports `DOTFILES`, `ZSH=$DOTFILES/zsh`, `EDITOR=vim`, `THEME`, `BACKGROUND`, `CODE_DIR=~/git` (if present).
+- Sets PATH in one consolidated block using zsh's `path` array (`typeset -U path` auto-dedupes). Globs like `~/bin/*/bin(N)` use the `(N)` null-glob qualifier to be safe when nothing matches.
+- Globs `$ZSH/**/*.zsh(N)` and sources every match. **Order is not controlled** — `*.zsh` files should be drop-in and order-independent.
 - Sources `~/.localrc` if present (intended for machine-local secrets/API keys, not checked into the repo).
-- Also globs and sources `$ZSH/**/*completion.sh`.
-- Adds `$DOTFILES/bin` and any `~/bin/*/bin` directories to PATH.
-- Branches on `uname` for Linux-vs-macOS-specific setup (asdf path, `open` alias, `xclip` selection, caps-lock remap).
-- Sets `THEME=base16-atelier-lakeside` and sources the matching base16-shell script from the submodule.
+- Initializes tab completion via `compinit`.
+- Loads plugins via antidote from `$ZSH/.zsh_plugins.txt` (currently: zsh-autosuggestions, zsh-history-substring-search, zsh-syntax-highlighting).
+- Sources tool integrations guarded by existence checks: asdf, nvm, Android SDK, Java.
+- Branches on `uname` for Linux-only aliases (`open=nautilus`, `xclip -selection c`).
+- Sources the base16 colorscheme (`$THEME`) from the `base16-shell` submodule.
+- Initializes starship for the prompt (`eval "$(starship init zsh)"` guarded by `command -v starship`).
 
 When adding new zsh config: drop a `*.zsh` file into `zsh/` (it will be auto-sourced) rather than editing `zshrc.bootstrap`. Reserve `zshrc.bootstrap` for PATH/env bootstrapping that must run in a specific order.
 
-## Vim / Neovim
+For new plugins: add a line to `zsh/.zsh_plugins.txt`. Keep `zsh-syntax-highlighting` last since it wraps ZLE widgets and needs to see final widget state.
 
-`vimrc.symlink` → `~/.vimrc` and `vim.symlink` → `~/.vim`. Plugins are managed with vim-plug; first-time setup is `nvim +PlugInstall` (or `vim +PlugInstall`). The README describes a shared config for both, but note `zsh/aliases.zsh` aliases `vim=nvim` while `zshrc.bootstrap` has `alias vim=vi` — the aliases file wins because it's sourced after bootstrap via the glob.
+## Vim
+
+`vimrc.symlink` → `~/.vimrc` and `vim.symlink` → `~/.vim`. Plugins are managed with vim-plug; first-time setup is `vim +PlugInstall`. Two plugins: `base16-vim` (colorscheme, matches `$THEME` from the shell) and `vim-fugitive` (git). The config is slim (~50 lines) — vim is used for git commits and quick edits, not full IDE work. Neovim is NOT installed by this repo.
 
 ## Platform-conditional code
 
-Most scripts branch on `uname` or `$(uname -s)`. When editing cross-platform code, preserve both branches — this repo is used on both Pop!_OS/Linux and macOS. Linux-specific concerns in `install.sh` include resilio-sync repo setup, apt package list, and `setxkbmap` for caps-lock remap.
+Most scripts branch on `uname` or `$(uname -s)`. When editing cross-platform code, preserve both branches — this repo is used on both Pop!_OS/Linux and macOS. Linux-specific concerns in `install.sh` include resilio-sync repo setup and the apt package list. Caps-lock-as-Ctrl is NOT managed by this repo — configure via Pop!_OS keyboard settings / `gnome-tweaks` as a one-time system action.
 
 ## Submodules
 
