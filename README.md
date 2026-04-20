@@ -1,14 +1,16 @@
 # Dotfiles
 
-Welcome to my world. This is a collection of vim, tmux, and zsh configurations. Interested in a video walkthrough of the dotfiles? Check out my talk, [vim + tmux](https://www.youtube.com/watch?v=5r6yzFEXajQ).
+Personal configuration for zsh, vim, tmux, and related tools. Forked from [nicknisi/dotfiles](https://github.com/nicknisi/dotfiles) and streamlined for minimal, opt-in setup. Supports macOS and Linux (primary target: Pop!_OS).
 
 ## Contents
 
-+ [Initial Setup and Installation](#initial-setup-and-installation)
-+ [ZSH Setup](#zsh-setup)
-+ [Vim and Neovim Setup](#vim-and-neovim-setup)
-+ [Fonts](#fonts)
-+ [Tmux](#tmux-configuration)
+- [Initial Setup and Installation](#initial-setup-and-installation)
+- [ZSH](#zsh)
+- [Vim](#vim)
+- [Tmux](#tmux)
+- [Fonts](#fonts)
+- [Optional tools (extras/)](#optional-tools-extras)
+- [Adding new config](#adding-new-config)
 
 ## Initial Setup and Installation
 
@@ -38,77 +40,88 @@ cd ~/.dotfiles
 ./install.sh
 ```
 
-`install.sh` will start by initializing the submodules used by this repository. Then, it will install all symbolic links into your home directory. Every file with a `.symlink` extension will be symlinked to the home directory with a `.` in front of it. As an example, `vimrc.symlink` will be symlinked in the home directory as `~/.vimrc`. Then, this script will create a `~/.vim-tmp` directory in your home directory, as this is where vim is configured to place its temporary files. Additionally, all files in the `$DOTFILES/config` directory will be symlinked to the `~/.config/` directory for applications that follow the [XDG base directory specification](http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html), such as neovim.
+### What `install.sh` does
 
-Next, the isntall script will perform a check to see if it is running on an OSX machine. If so, it will install Homebrew if it is not currently installed and will install the homebrew packages listed in [`brew.sh`](install/brew.sh). Then, it will run [`osx.sh`](install/osx.sh) and change some OSX configurations. This file is pretty well documented and so it is advised that you __read through and comment out any changes you do not want__. Next, the script will call [`install/nvm.sh`](install/nvm.sh) to install Node.js (stable) using nvm.
+1. Populates the `base16-shell` submodule (or clones it manually if you downloaded the repo as a zip).
+2. Runs `install/link.sh`, which symlinks every `*.symlink` file to `~/.<name>` (e.g., `vimrc.symlink` → `~/.vimrc`) and everything under `.config/` into `~/.config/`.
+3. **macOS**: installs Homebrew and runs [`brew.sh`](install/brew.sh) + [`osx.sh`](install/osx.sh). Read `osx.sh` before running — it sets a number of system preferences; comment out anything you don't want.
+4. **Linux**: installs apt packages (zsh, tmux, vim, build-essential, resilio-sync, etc.), installs [starship](https://starship.rs) via the official curl script, and downloads [JetBrainsMono Nerd Font](https://github.com/ryanoasis/nerd-fonts) to `~/.local/share/fonts/`.
+5. **Both platforms**: clones nvm to `~/.nvm` and [antidote](https://getantidote.github.io) to `~/.antidote` (both idempotent), changes the login shell to zsh, appends the bootstrap line to `~/.zshrc`, and runs `nvm install stable`.
 
-## ZSH Setup
+### Next steps (printed at the end)
 
-ZSH is configured in the `zshrc.symlink` file, which will be symlinked to the home directory. The following occurs in this file:
+1. **Log out and back in** for the zsh shell change to take effect.
+2. **Install vim plugins**: `vim +PlugInstall`.
+3. **Set your terminal emulator font** to *"JetBrainsMono Nerd Font Mono"* so starship's git-branch and status glyphs render.
+4. **Linux only**: configure caps-lock-as-Ctrl via your system's keyboard settings (Pop!_OS Settings → Keyboard, or install `gnome-tweaks`). The dotfiles no longer do this per-shell.
 
-* set the `EDITOR` to nvim
-* Load any `~/.terminfo` setup
-* Set the `CODE_DIR` variable, pointing to the location where the code projects exist for exclusive autocompletion with the `c` command
-* Recursively search the `$DOTFILES/zsh` directory for files ending in .zsh and source them
-* source a `~/.localrc` if it exists so that additional configurations can be made that won't be kept track of in this dotfiles repo. This is good for things like API keys, etc.
-* Add the `~/bin` and `$DOTFILES/bin` directories to the path
-* Setup NVM, RVM, and hub if they exist
-* Set the base16 colorscheme to use for both the terminal (iTerm2) and vim/neovim by exporting the `$THEME` and `$BACKGROUND` environment variables
-* And more...
+## ZSH
+
+`~/.zshrc` is a one-liner that sources [`zsh/zshrc.bootstrap`](zsh/zshrc.bootstrap). The bootstrap:
+
+- Exports `DOTFILES`, `EDITOR=vim`, `THEME`, `BACKGROUND`, and `CODE_DIR=~/git` (if that directory exists).
+- Sets PATH via a zsh `path` array (`typeset -U path` auto-deduplicates).
+- Glob-sources every `*.zsh` file under `zsh/` — modules are order-independent.
+- Sources `~/.localrc` if present (for machine-local secrets / overrides not in git).
+- Initializes completion (`compinit`).
+- Loads plugins via antidote from [`zsh/.zsh_plugins.txt`](zsh/.zsh_plugins.txt).
+- Initializes [starship](https://starship.rs) as the prompt.
+- Sources tool integrations with existence guards: asdf, nvm, Android SDK, Java.
+
+### Plugins
+
+Three zsh quality-of-life plugins via antidote:
+
+- [`zsh-autosuggestions`](https://github.com/zsh-users/zsh-autosuggestions) — inline gray suggestions from history (press → to accept)
+- [`zsh-history-substring-search`](https://github.com/zsh-users/zsh-history-substring-search) — substring history search with ↑/↓
+- [`zsh-syntax-highlighting`](https://github.com/zsh-users/zsh-syntax-highlighting) — red-for-invalid, green-for-valid command coloring
 
 ### Prompt
 
-The prompt is meant to be simple while still providing a lot of information to the user, particularly about the status of the git project, if the PWD is a git project. This prompt sets `precmd`, `PROMPT` and `RPROMPT`.
+[starship](https://starship.rs) provides the prompt. Out of the box it shows the current directory, git branch + dirty indicator + ahead/behind arrows, language versions when relevant, exit code of the previous command, and more. Customize via `~/.config/starship.toml` (not committed here).
 
-![](http://nicknisi.com/share/prompt.png)
+## Vim
 
-The `precmd` shows the current working directory in it and the `RPROMPT` shows the git and suspended jobs info.
+[`vimrc.symlink`](vimrc.symlink) is a slim (~50 line) config used for git commit messages and quick edits — not full IDE work. Two plugins managed by [vim-plug](https://github.com/junegunn/vim-plug):
 
-#### Prompt Git Info
+- `chriskempson/base16-vim` — colorscheme matching the shell's `$THEME`
+- `tpope/vim-fugitive` — git inside vim (`:Git`, `:Git blame`, etc.)
 
-The git info shown on the `RPROMPT` displays the current branch name, and whether it is clean or dirty.
+Run `vim +PlugInstall` once to download the plugins. **Neovim is not installed or configured by this repo.**
 
-![](http://nicknisi.com/share/git-branch-state.png)
+## Tmux
 
-Additionally, there are ⇣ and ⇡ arrows that indicate whether a commit has happened and needs to be pushed (⇡), and whether commits have happened on the remote branch that need to be pulled (⇣).
+[`tmux/tmux.conf.symlink`](tmux/tmux.conf.symlink) is a minimal (~20 line) config:
 
-![](http://nicknisi.com/share/git-arrows.png)
+- `C-a` prefix (replaces the default `C-b`)
+- Mouse on (pane resize, window switch, selection)
+- Vi-style copy-mode (matches vim muscle memory)
+- 1-indexed windows and panes, auto-renumber on close
+- 10,000-line scrollback
+- 256-color terminal, short escape-time for vim responsiveness
 
-#### Suspended Jobs
-
-The prompt will also display a ✱ character in the `RPROMPT` indicating that there is a suspended job that exists in the background. This is helpful in keeping track of putting vim in the background by pressing CTRL-Z.
-
-![](http://nicknisi.com/share/suspended-jobs.png)
-
-## Vim and Neovim Setup
-
-[Neovim](https://neovim.io/) is a fork and drop-in replacement for vim. in most cases, you would not notice a difference between the two, other than Neovim allows plugins to run asynchronously so that they do not freeze the editor, which is the main reason I have switched over to it. Vim and Neovim both use Vimscript and most plugins will work in both (all of the plugins I use do work in both Vim and Neovim). For this reason, they share the same configuration files in this setup. Neovim uses the [XDG base directory specification](http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html) which means it won't look for a `.vimrc` in your home directory. Instead, its configuration looks like the following:
-
-|                         | Vim        | Neovim                    |
-|-------------------------|------------|---------------------------|
-| Main Configuratin File  | `~/.vimrc` | `~/.config/nvim/init.vim` |
-| Configuration directory | `~/.vim`   | `~/.config/nvim`          |
-
-### Installation
-
-Vim is likely already installed on your system. If using a Mac, MacVim will be installed from Homebrew. Neovim will also be installed from Homebrew by default on a Mac. For other systems, you may need to install Neovim manually. See their [web site](https://neovim.io) for more information.
-
-[`link.sh`](install/link.sh) will symlink the XDG configuration directory into your home directory and will then create symlinks for `.vimrc` and `.vim` over to the Neovim configuration so that Vim and Neovim will both be configured in the same way from the same files. The benefit of this configuration is that you only have to maintain a single vim configuration for both, so that if Neovim (which is still alpha software) has issues, you can very seamlessly transition back to vim with no big impact to your productivity.
-
-Inside of [`.zshrc`](zsh/zshrc.symlink), the `EDITOR` shell variable is set to `nvim`, defaulting to Neovim for editor tasks, such as git commit messages. Additionally, I have aliased `vim` to `nvim` in [`aliases.zsh`](zsh/aliases.zsh) You can remove this if you would rather not alias the `vim` command to `nvim`.
-
-vim and neovim should just work once the correct plugins are installed. To install the plugins, you will need to open Neovim in the following way:
-
-```bash
-nvim +PlugInstall
-```
+No plugin manager, no custom theme — defaults are fine.
 
 ## Fonts
 
-I am currently using [Jetbrains Mono](https://www.jetbrains.com/lp/mono/) as my default font, which does include Powerline support, so you don't need an additional patched font. In addition to this, I do have [nerd-fonts](https://github.com/ryanoasis/nerd-fonts) installed and configured to be used for non-ascii characters. If you would prefer not to do this, then simply remove the `Plug 'ryanoasis/vim-devicons'` plugin from vim/nvim. Then, I configure the fonts in this way in iTerm2:
+`install.sh` downloads **JetBrainsMono Nerd Font** automatically: to `~/.local/share/fonts/` on Linux (via curl + unzip), or via `brew install --cask font-jetbrains-mono-nerd-font` on macOS. Point your terminal emulator at *"JetBrainsMono Nerd Font Mono"* for starship's glyph icons to render — this is a one-time manual step in the terminal's preferences.
 
-![](http://nicknisi.com/share/iterm-fonts-config.png)
+## Optional tools (`extras/`)
 
-## Tmux Configuration
+Opt-in installer scripts for tools you might want but don't need by default. Each is self-contained, idempotent, and handles its own platform branching:
 
-*TODO: Documentation coming soon.*
+```bash
+./extras/rust
+```
+
+See [`extras/README.md`](extras/README.md) for the full list.
+
+Currently included: `asdf`, `claude` (Claude Code + superpowers plugin), `crystal`, `docker`, `fly` (fly.io CLI), `kvm`, `python`, `ruby`, `rust`, `vscode`.
+
+## Adding new config
+
+- **New dotfile**: name the file `<name>.symlink` (or put a directory under `.config/`). [`install/link.sh`](install/link.sh) handles the symlinking automatically — no script edits needed.
+- **New zsh module**: drop a `*.zsh` file under `zsh/`. It'll be auto-sourced. Order isn't controlled, so the file should be drop-in.
+- **New zsh plugin**: add a line to `zsh/.zsh_plugins.txt` (keep `zsh-syntax-highlighting` last — it wraps ZLE widgets).
+- **New vim plugin**: add a `Plug '<repo>'` line between the `plug#begin/plug#end` markers in `vimrc.symlink`, then `:PlugInstall`.
+- **New optional tool**: add an executable script under `extras/` and a row in `extras/README.md`.
