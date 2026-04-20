@@ -28,6 +28,12 @@ for config ($ZSH/**/*.zsh(N)) source $config
 [[ -a ~/.localrc ]] && source ~/.localrc
 
 # Completion system
+# Drop fpath entries that don't exist (e.g. /usr/share/zsh/vendor-functions
+# on Pop!_OS when no package populates it) so compinit doesn't flag them.
+typeset -a _valid_fpath
+for _d in $fpath; do [[ -d $_d ]] && _valid_fpath+=($_d); done
+fpath=($_valid_fpath)
+unset _valid_fpath _d
 autoload -U compinit
 compinit
 
