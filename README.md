@@ -4,22 +4,15 @@ Personal configuration for zsh, vim, tmux, and related tools. Forked from [nickn
 
 ## Contents
 
-- [Installation](#installation)
+- [Install](#install)
 - [After install](#after-install)
 - [What's included](#whats-included)
 - [Optional tools (extras/)](#optional-tools-extras)
 - [Adding new config](#adding-new-config)
 
-## Installation
+## Install
 
-**Prerequisites** — `git` and `curl`.
-
-- macOS: `xcode-select --install`
-- Linux (Pop!_OS / Debian / Ubuntu): `sudo apt install -y git curl`
-
-If you skip this step, `install.sh` will try to install them itself.
-
-**Install** — clone anywhere (symlinks reference the repo from `$HOME`) and run:
+Clone anywhere (symlinks reference the repo from `$HOME`) and run the installer:
 
 ```bash
 git clone https://github.com/da1nerd/dotfiles.git ~/.dotfiles
