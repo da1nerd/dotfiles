@@ -56,8 +56,6 @@ elif [ "$(uname -s)" == "Linux" ]; then
 		lm-sensors \
 		neofetch \
 		resilio-sync \
-		ruby \
-		ruby-dev \
 		snapd \
 		tmux \
 		unzip \
@@ -146,6 +144,7 @@ if [ "$(uname -s)" == "Linux" ]; then
 	echo "     (System Settings → Keyboard, or install gnome-tweaks)."
 	echo ""
 	echo "Optional:"
-	echo "  - Run $DOTFILES/install/software.sh for VS Code, asdf, Crystal."
+	echo "  - Browse optional tools in $DOTFILES/extras/ (asdf, crystal,"
+	echo "    docker, fly, kvm, python, ruby, rust, vscode)."
 fi
 echo ""
