@@ -213,6 +213,7 @@ path=(
     /usr/local/sbin(N)
     /usr/local/bin(N)
     $DOTFILES/bin
+    ~/.local/bin(N)
     ~/bin/*/bin(N)
     $path
 )
