@@ -1,145 +1,84 @@
 export DOTFILES=$HOME/.dotfiles
 export ZSH=$DOTFILES/zsh
 
-# display how long all tasks over 10 seconds take
+# Env
+export EDITOR='vim'
 export REPORTTIME=10
-
+export THEME='base16-atelier-lakeside'
+export BACKGROUND='dark'
 [[ -e ~/.terminfo ]] && export TERMINFO_DIRS=~/.terminfo:/usr/share/terminfo
+[[ -d ~/git ]] && export CODE_DIR=~/git
+[ -z "$TMUX" ] && export TERM=xterm-256color
 
-# define the code directory
-# This is where my code exists and where I want the `c` autocomplete to work from exclusively
-if [[ -d ~/git ]]; then
-    export CODE_DIR=~/git
-fi
+# PATH: zsh auto-dedupes; (N) means "empty if no match"
+typeset -U path
+path=(
+    /usr/local/sbin(N)
+    /usr/local/bin(N)
+    $DOTFILES/bin
+    ~/.local/bin(N)
+    ~/bin/*/bin(N)
+    $path
+)
 
-# add go paths
-export GOPATH=~/go
-export PATH=$PATH:/usr/local/go/bin:~/go/bin
+# Source all .zsh modules (null-glob safe)
+for config ($ZSH/**/*.zsh(N)) source $config
 
-export PATH=$PATH:~/git/electronite/depot_tools
+# Machine-local overrides (not in git)
+[[ -a ~/.localrc ]] && source ~/.localrc
 
-# source all .zsh files inside of the zsh/ directory
-for config ($ZSH/**/*.zsh) source $config
-
-if [[ -a ~/.localrc ]]; then
-    source ~/.localrc
-fi
-
-# initialize autocomplete
+# Completion system
 autoload -U compinit
 compinit
 
-for config ($ZSH/**/*completion.sh) source $config
-
-export EDITOR='vim'
-
-export PATH=/usr/local/bin:$PATH
-
-# add /usr/local/sbin
-if [[ -d /usr/local/sbin ]]; then
-    export PATH=/usr/local/sbin:$PATH
+# Plugins (antidote)
+if [[ -s ~/.antidote/antidote.zsh ]]; then
+    source ~/.antidote/antidote.zsh
+    antidote load $ZSH/.zsh_plugins.txt
 fi
 
-# add composer
-if [[ -d ~/.config/composer/vendor/bin ]]; then
-	export PATH=~/.config/composer/vendor/bin:$PATH
-fi
-
-# add flutter
-if [[ -d ~/git/flutter ]]; then
-	export PATH=~/git/flutter/bin:$PATH
-	export PATH=~/git/flutter/flutter/bin:$PATH
-fi
-
-# add asdf
+# asdf
 if [[ -d ~/.asdf ]]; then
-	if [[ `uname` == 'Linux' ]]; then
-		. $HOME/.asdf/asdf.sh
-	else
-		. $(brew --prefix asdf)/libexec/asdf.sh
-	fi
+    if [[ `uname` == 'Linux' ]]; then
+        . $HOME/.asdf/asdf.sh
+    else
+        . $(brew --prefix asdf)/libexec/asdf.sh
+    fi
 fi
 
-# add mysql
-if [[ -d /usr/local/mysql/bin ]]; then
-	export PATH=/usr/local/mysql/bin:$PATH
+# nvm
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
+# Node global packages
+NPM_PACKAGES="$HOME/.npm-packages"
+[[ -d $NPM_PACKAGES/bin ]] && path=($NPM_PACKAGES/bin $path)
+[[ -d $NPM_PACKAGES/share/man ]] && export MANPATH="$NPM_PACKAGES/share/man"
+[[ -d $NPM_PACKAGES/lib/node_modules ]] && export NODE_PATH="$NPM_PACKAGES/lib/node_modules:$NODE_PATH"
+
+# Android SDK
+if [[ -d ~/Android/Sdk ]]; then
+    export ANDROID_HOME=~/Android/Sdk
+    [[ -d ~/Android/Sdk/tools ]] && path=(~/Android/Sdk/tools $path)
+    [[ -d ~/Android/Sdk/platform-tools ]] && path=(~/Android/Sdk/platform-tools $path)
 fi
 
-# adding path directory for custom scripts
-export PATH=$DOTFILES/bin:$PATH
+# Java
+if [[ -d /usr/lib/jvm ]]; then
+    export JAVA_HOME=$(ls -d /usr/lib/jvm/* | grep "[0-9]\+$" | sort --version-sort | tail -n 1)
+    path=($path $JAVA_HOME/bin)
+fi
 
-# check for custom bin directory and add to path
-while IFS=  read -r -d $'\n'; do
-	PATH="$REPLY:$PATH"
-done < <(find -H ~/bin -maxdepth 2 -type d -name 'bin')
-export PATH
-
-[ -z "$TMUX" ] && export TERM=xterm-256color
-
-# Add aliases
+# Linux-only aliases
 if [[ `uname` == 'Linux' ]]; then
     alias open=nautilus
-	alias xclip="xclip -selection c"
+    alias xclip='xclip -selection c'
 fi
 
-# did file alias
-alias did="vim +'normal Go' +'r!date' ~/did.txt"
-
-# Base16 Shell
-# if [ -z "$THEME" ]; then
-    export THEME="base16-atelier-lakeside"
-# fi
-if [ -z "$BACKGROUND" ]; then
-    export BACKGROUND="dark"
-fi
-
+# Base16 colorscheme
 BASE16_SHELL="$DOTFILES/.config/base16-shell/scripts/$THEME.sh"
-# [[ -s $BASE16_SHELL ]] && source $BASE16_SHELL
-source $BASE16_SHELL
+[[ -s $BASE16_SHELL ]] && source $BASE16_SHELL
 
-# add android platform tools
-if [[ -d ~/Android/Sdk ]]; then
-	export ANDROID_HOME=~/Android/Sdk
-fi
-if [[ -d ~/Android/Sdk/tools ]]; then
-	export PATH=~/Android/Sdk/tools:$PATH
-fi
-if [[ -d ~/Android/Sdk/platform-tools ]]; then
-	export PATH=~/Android/Sdk/platform-tools:$PATH
-fi
-if [[ -d ~/Android/Sdk ]]; then
-	export ANDROID_HOME=~/Android/Sdk
-fi
-
-# add travis path
-[ -f ~/.travis/travis.sh ] && source ~/.travis/travis.sh
-
-# add java path
-if [[ -d /usr/lib/jvm ]]; then
-	export JAVA_HOME=$(ls -d /usr/lib/jvm/* | grep "[0-9]\+$" | sort --version-sort | tail -n 1)
-	export PATH=$PATH:$JAVA_HOME/bin
-fi
-
-# disable caps lock in favor of ctrl
-if [[ `uname` == 'Linux' ]]; then
-	setxkbmap -option ctrl:nocaps
-fi
-
-# configure nvm.
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-# add paths to node
-export PATH=$HOME/.node/bin:$PATH
-NPM_PACKAGES="$HOME/.npm-packages"
-export PATH="$NPM_PACKAGES/bin:$PATH"
-export MANPATH="$NPM_PACKAGES/share/man"
-export NODE_PATH="$NPM_PACKAGES/lib/node_modules:$NODE_PATH"
-
-if (( $+commands[yarn] )); then
-	export PATH="$PATH: `yarn global bin`"
-fi
-
-test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
-
+# Prompt (starship)
+command -v starship >/dev/null && eval "$(starship init zsh)"
