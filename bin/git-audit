@@ -95,36 +95,65 @@ done < <(find "$path_abs" -type d \
 
 any_flagged=0
 
+# Truncate a comma-joined list to the first 5 entries, append "(+N more)".
+truncate_list() {
+  local -a items=("$@")
+  local n=${#items[@]}
+  local result=""
+  local limit=$(( n <= 5 ? n : 5 ))
+  local i
+  for (( i = 0; i < limit; i++ )); do
+    [[ -n "$result" ]] && result+=", "
+    result+="${items[$i]}"
+  done
+  if (( n > 5 )); then
+    result+=" (+$(( n - 5 )) more)"
+  fi
+  echo "$result"
+}
+
 for repo in "${repos[@]+"${repos[@]}"}"; do
   tags=()
+  # Per-condition detail, populated in parallel with tags for verbose output.
+  detail_modified=()
+  detail_untracked=()
+  detail_staged=()
+  detail_unpushed=""
+  detail_upstream=""
+  detail_branch=""
 
-  # Working-tree state from `git status --porcelain` (v1 format).
-  # Columns: first = index (staged), second = worktree (unstaged).
-  # "??" means untracked.
   porc=$(git -C "$repo" status --porcelain 2>/dev/null)
 
-  if echo "$porc" | grep -q '^.[MDARCU]'; then
-    tags+=("uncommitted")
-  fi
-  if echo "$porc" | grep -q '^[MADRCU] '; then
-    tags+=("staged")
-  fi
-  if echo "$porc" | grep -q '^??'; then
-    tags+=("untracked")
-  fi
+  # Parse porcelain lines once into per-category detail.
+  while IFS= read -r line; do
+    [[ -z "$line" ]] && continue
+    idx="${line:0:1}"
+    wt="${line:1:1}"
+    rest="${line:3}"
+    case "$idx$wt" in
+      '??') detail_untracked+=("$rest") ;;
+      *)
+        if [[ "$wt" =~ [MDARCU] ]]; then
+          detail_modified+=("$rest")
+        fi
+        if [[ "$idx" =~ [MADRCU] && "$wt" == " " ]]; then
+          detail_staged+=("$rest")
+        fi
+        ;;
+    esac
+  done <<< "$porc"
 
-  # Branch / remote state.
-  # HEAD is either a branch name (normal), "HEAD" (detached), or empty on
-  # a brand-new repo with no commits. `symbolic-ref --quiet` returns
-  # non-zero for detached HEAD.
+  (( ${#detail_modified[@]} > 0 )) && tags+=("uncommitted")
+  (( ${#detail_staged[@]} > 0 )) && tags+=("staged")
+  (( ${#detail_untracked[@]} > 0 )) && tags+=("untracked")
+
   head_ref=$(git -C "$repo" symbolic-ref --quiet --short HEAD 2>/dev/null || true)
-
   remotes=$(git -C "$repo" remote 2>/dev/null)
 
   if [[ -z "$remotes" ]]; then
     tags+=("no-remote")
   elif [[ -n "$head_ref" ]]; then
-    # On a branch. Check tracking.
+    detail_branch="$head_ref"
     upstream=$(git -C "$repo" rev-parse --abbrev-ref --symbolic-full-name \
                  '@{u}' 2>/dev/null || true)
     if [[ -z "$upstream" ]]; then
@@ -133,24 +162,47 @@ for repo in "${repos[@]+"${repos[@]}"}"; do
       ahead=$(git -C "$repo" rev-list --count "$upstream..HEAD" 2>/dev/null || echo 0)
       if (( ahead > 0 )); then
         tags+=("unpushed:$ahead")
+        detail_unpushed="$ahead"
+        detail_upstream="$upstream"
       fi
     fi
   fi
-  # Detached HEAD (head_ref empty) with a remote: no branch tag added.
 
   (( ${#tags[@]} == 0 )) && continue
   any_flagged=1
 
-  # Relative path for readable output.
   rel="${repo#$path_abs/}"
   [[ "$rel" == "$repo" ]] && rel="."
 
-  # Compact output: path, then each tag in brackets.
-  printf '%s' "$rel"
-  for tag in "${tags[@]}"; do
-    printf ' [%s]' "$tag"
-  done
-  printf '\n'
+  if (( verbose )); then
+    printf '%s\n' "$rel"
+    if (( ${#detail_modified[@]} > 0 )); then
+      printf '  Modified:    %s\n' "$(truncate_list "${detail_modified[@]}")"
+    fi
+    if (( ${#detail_staged[@]} > 0 )); then
+      printf '  Staged:      %s\n' "$(truncate_list "${detail_staged[@]}")"
+    fi
+    if (( ${#detail_untracked[@]} > 0 )); then
+      printf '  Untracked:   %s\n' "$(truncate_list "${detail_untracked[@]}")"
+    fi
+    if [[ -n "$detail_unpushed" ]]; then
+      printf '  Unpushed:    %s (%s commits ahead of %s)\n' \
+        "$detail_branch" "$detail_unpushed" "$detail_upstream"
+    fi
+    # no-upstream / no-remote also deserve verbose lines.
+    for tag in "${tags[@]}"; do
+      case "$tag" in
+        no-upstream:*) printf '  No upstream: %s\n' "${tag#no-upstream:}" ;;
+        no-remote)     printf '  No remote configured\n' ;;
+      esac
+    done
+  else
+    printf '%s' "$rel"
+    for tag in "${tags[@]}"; do
+      printf ' [%s]' "$tag"
+    done
+    printf '\n'
+  fi
 done
 
 (( any_flagged )) && exit 1
