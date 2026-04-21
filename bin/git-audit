@@ -75,7 +75,58 @@ fi
 
 path_abs=$(cd "$path" && pwd)
 
-# Phase B will add: discovery, per-repo checks, output formatting, fetch,
-# error handling. For now the script validates args and exits clean.
+# --- Discovery ---
+#
+# Walk "$path_abs" and collect every directory containing a ".git" entry
+# (either a directory or a gitfile for worktrees). Stop descending once a
+# repo is found, so submodules / vendored checkouts aren't audited
+# separately.
 
+repos=()
+while IFS= read -r -d '' repo; do
+  repos+=("$repo")
+done < <(find "$path_abs" -type d \
+  \( -exec sh -c 'test -e "$0/.git"' {} \; -print0 -prune \) 2>/dev/null)
+
+# --- Per-repo checks ---
+#
+# For each repo, compute tags. A repo with no tags is silently skipped.
+# The ordering of tags on output follows the order they're appended here.
+
+any_flagged=0
+
+for repo in "${repos[@]}"; do
+  tags=()
+
+  # Working-tree state from `git status --porcelain` (v1 format).
+  # Columns: first = index (staged), second = worktree (unstaged).
+  # "??" means untracked.
+  porc=$(git -C "$repo" status --porcelain 2>/dev/null)
+
+  if echo "$porc" | grep -q '^.[MDARCU]'; then
+    tags+=("uncommitted")
+  fi
+  if echo "$porc" | grep -q '^[MADRCU] '; then
+    tags+=("staged")
+  fi
+  if echo "$porc" | grep -q '^??'; then
+    tags+=("untracked")
+  fi
+
+  (( ${#tags[@]} == 0 )) && continue
+  any_flagged=1
+
+  # Relative path for readable output.
+  rel="${repo#$path_abs/}"
+  [[ "$rel" == "$repo" ]] && rel="."
+
+  # Compact output: path, then each tag in brackets.
+  printf '%s' "$rel"
+  for tag in "${tags[@]}"; do
+    printf ' [%s]' "$tag"
+  done
+  printf '\n'
+done
+
+(( any_flagged )) && exit 1
 exit 0
