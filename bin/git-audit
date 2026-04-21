@@ -95,7 +95,7 @@ done < <(find "$path_abs" -type d \
 
 any_flagged=0
 
-for repo in "${repos[@]}"; do
+for repo in "${repos[@]+"${repos[@]}"}"; do
   tags=()
 
   # Working-tree state from `git status --porcelain` (v1 format).
