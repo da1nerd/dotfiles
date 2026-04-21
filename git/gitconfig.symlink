@@ -116,6 +116,8 @@
 [push]
     # push will only do the current branch, not all branches
     default = current
+    # on first push of a branch, auto-set upstream to origin/<branch>
+    autoSetupRemote = true
 #[branch]
     # set up 'git pull' to rebase instead of merge
 [merge]
