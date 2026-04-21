@@ -88,6 +88,17 @@ while IFS= read -r -d '' repo; do
 done < <(find "$path_abs" -type d \
   \( -exec sh -c 'test -e "$0/.git"' {} \; -print0 -prune \) 2>/dev/null)
 
+# --- Optional fetch pass ---
+#
+# When --fetch is passed, run `git fetch --quiet --all` on every discovered
+# repo before running checks. Parallelized via xargs -P 8. Fetch failures
+# (e.g. unreachable remote) are tolerated — they don't abort the audit.
+
+if (( fetch && ${#repos[@]} > 0 )); then
+  printf '%s\0' "${repos[@]}" \
+    | xargs -0 -n 1 -P 8 -I {} sh -c 'git -C "$1" fetch --quiet --all 2>/dev/null || true' _ {}
+fi
+
 # --- Per-repo checks ---
 #
 # For each repo, compute tags. A repo with no tags is silently skipped.
