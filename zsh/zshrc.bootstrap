@@ -46,13 +46,14 @@ if [[ -s ~/.antidote/antidote.zsh ]]; then
     antidote load $ZSH/.zsh_plugins.txt
 fi
 
-# asdf
-if [[ -d ~/.asdf ]]; then
-    if [[ `uname` == 'Linux' ]]; then
-        . $HOME/.asdf/asdf.sh
-    else
-        . $(brew --prefix asdf)/libexec/asdf.sh
-    fi
+# asdf — extras/asdf git-clones into ~/.asdf on both platforms. Fall back
+# to a brew-managed install only if the self-managed clone isn't present.
+if [[ -s ~/.asdf/asdf.sh ]]; then
+    . ~/.asdf/asdf.sh
+elif command -v brew >/dev/null 2>&1; then
+    _asdf_prefix=$(brew --prefix asdf 2>/dev/null)
+    [[ -s $_asdf_prefix/libexec/asdf.sh ]] && . $_asdf_prefix/libexec/asdf.sh
+    unset _asdf_prefix
 fi
 
 # nvm
@@ -67,10 +68,14 @@ if [[ -d ~/Android/Sdk ]]; then
     [[ -d ~/Android/Sdk/platform-tools ]] && path=(~/Android/Sdk/platform-tools $path)
 fi
 
-# Java
-if [[ -d /usr/lib/jvm ]]; then
+# Java. On Linux, pick the newest JDK under /usr/lib/jvm. On macOS, defer
+# to /usr/libexec/java_home (system tool) when a JDK is present.
+if [[ `uname` == 'Linux' && -d /usr/lib/jvm ]]; then
     export JAVA_HOME=$(ls -d /usr/lib/jvm/* | grep "[0-9]\+$" | sort --version-sort | tail -n 1)
     [[ -d $JAVA_HOME/bin ]] && path=($path $JAVA_HOME/bin)
+elif [[ `uname` == 'Darwin' && -x /usr/libexec/java_home ]]; then
+    _jh=$(/usr/libexec/java_home 2>/dev/null) && export JAVA_HOME=$_jh
+    unset _jh
 fi
 
 # Linux-only aliases

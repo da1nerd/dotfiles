@@ -14,8 +14,13 @@ if [ ${#missing[@]} -gt 0 ]; then
 		sudo apt-get update
 		sudo apt-get -y install "${missing[@]}"
 	elif [ "$(uname -s)" == "Darwin" ]; then
-		echo "On macOS, run 'xcode-select --install' for git, then re-run this script."
-		exit 1
+		if command -v brew >/dev/null; then
+			brew install "${missing[@]}"
+		else
+			echo "On macOS, run 'xcode-select --install' to get git/curl"
+			echo "(or install Homebrew first), then re-run this script."
+			exit 1
+		fi
 	else
 		echo "Install them manually, then re-run."
 		exit 1

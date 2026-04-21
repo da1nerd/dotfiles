@@ -1,30 +1,30 @@
 #!/bin/sh
 
-if test ! $(which brew); then
+if ! command -v brew >/dev/null 2>&1; then
     echo "Installing homebrew"
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 
-if test ! $(which wget); then
+if ! command -v wget >/dev/null 2>&1; then
     brew install wget
 fi
 
-if test ! $(which git); then
+if ! command -v git >/dev/null 2>&1; then
     brew install git
 fi
 
-if test ! $(which zsh); then
+if ! command -v zsh >/dev/null 2>&1; then
     brew install zsh
 fi
 
-if test ! $(which ack); then
+if ! command -v ack >/dev/null 2>&1; then
     brew install ack
 fi
 
-if test ! $(which starship); then
+if ! command -v starship >/dev/null 2>&1; then
     brew install starship
 fi
 
-if ! brew list --cask font-jetbrains-mono-nerd-font &>/dev/null; then
+if ! brew list --cask font-jetbrains-mono-nerd-font >/dev/null 2>&1; then
     brew install --cask font-jetbrains-mono-nerd-font
 fi
