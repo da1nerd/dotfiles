@@ -2,7 +2,7 @@
 [user]
 	name = Joel
 	email = da1nerd@pm.me
-	signingkey = AD4FD52
+	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL/Fi2ynopwjaVnlVvlfpRxkmKPcciDbqulAyaemTKlV
 [github]
 	user = da1nerd
 [init]
@@ -153,5 +153,12 @@
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
 	required = true
+	process = git-lfs filter-process
 [credential]
 	helper = store
+[gpg]
+	format = ssh
+[gpg "ssh"]
+	program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
+[commit]
+	gpgsign = true
