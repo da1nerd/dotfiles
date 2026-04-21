@@ -1,0 +1,81 @@
+#!/usr/bin/env bash
+#
+# git-audit — report git repositories under [path] that have unsynced work.
+#
+# Usage:
+#   git-audit [--fetch] [-v|--verbose] [-h|--help] [path]
+#
+# Default path: ~/git. Exit 0 if clean, 1 if any repos flagged, 2 on usage errors.
+
+set -u
+set -o pipefail
+# Note: set -e is intentionally off. Per-repo git failures are expected and
+# are handled with explicit status checks.
+
+usage() {
+  cat <<'EOF'
+Usage: git-audit [--fetch] [-v|--verbose] [-h|--help] [path]
+
+Report git repositories under [path] that are not safely synced:
+uncommitted, staged, untracked, unpushed, no-upstream, or no-remote.
+
+  --fetch        Fetch from all remotes before auditing (parallelized, 8 at a time).
+  -v, --verbose  Multi-line per-repo detail instead of compact tags.
+  -h, --help     Show this help and exit.
+
+Path defaults to ~/git. Exit 0 if no repos are flagged, 1 if any are,
+2 on a usage error.
+EOF
+}
+
+# --- CLI parsing ---
+
+fetch=0
+verbose=0
+path=""
+
+while (( $# > 0 )); do
+  case "$1" in
+    -h|--help) usage; exit 0 ;;
+    --fetch) fetch=1 ;;
+    -v|--verbose) verbose=1 ;;
+    --)
+      shift
+      if (( $# > 0 )); then
+        if [[ -n "$path" ]]; then
+          echo "git-audit: unexpected argument: $1" >&2; exit 2
+        fi
+        path="$1"; shift
+      fi
+      if (( $# > 0 )); then
+        echo "git-audit: unexpected argument: $1" >&2; exit 2
+      fi
+      ;;
+    -*)
+      echo "git-audit: unknown option: $1" >&2
+      usage >&2
+      exit 2
+      ;;
+    *)
+      if [[ -n "$path" ]]; then
+        echo "git-audit: unexpected argument: $1" >&2; exit 2
+      fi
+      path="$1"
+      ;;
+  esac
+  shift || true
+done
+
+path="${path:-$HOME/git}"
+
+if [[ ! -d "$path" ]]; then
+  echo "git-audit: not a directory: $path" >&2
+  exit 2
+fi
+
+path_abs=$(cd "$path" && pwd)
+
+# Phase B will add: discovery, per-repo checks, output formatting, fetch,
+# error handling. For now the script validates args and exits clean.
+
+exit 0
