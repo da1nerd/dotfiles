@@ -33,6 +33,23 @@ for config in $DOTFILES/.config/*; do
     fi
 done
 
+echo -e "\n\nInstalling to ~/.claude"
+echo "=============================="
+if [ ! -d $HOME/.claude ]; then
+    echo "Creating ~/.claude"
+    mkdir -p $HOME/.claude
+fi
+for config in $DOTFILES/claude/*; do
+    target=$HOME/.claude/$( basename $config )
+    echo "$target"
+    if [[ -e $target ]]; then
+        echo "~${target#$HOME} already exists... Skipping."
+    else
+        echo "Creating symlink for $config"
+        ln -s $config $target
+    fi
+done
+
 # TODO: load conky paths into an array and iterate
 #if [[ $(uname) == 'Linux' ]]; then
 #    echo -e "\n\nCreating conky symlinks"

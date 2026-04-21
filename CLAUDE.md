@@ -11,14 +11,14 @@ Personal dotfiles repo for zsh, vim, tmux, and related config. Forked from nickn
 `install.sh` is the entry point. It:
 
 1. Runs `git submodule update --init --recursive` (pulls `.config/base16-shell`).
-2. Sources `install/link.sh`, which is the core symlink mechanism: every file/dir ending in `.symlink` anywhere up to 3 levels deep gets symlinked to `~/.<basename>` (e.g. `vimrc.symlink` → `~/.vimrc`, `vim.symlink` → `~/.vim`). Everything under `.config/` is symlinked into `~/.config/`. Existing targets are skipped, not overwritten.
+2. Sources `install/link.sh`, which is the core symlink mechanism: every file/dir ending in `.symlink` anywhere up to 3 levels deep gets symlinked to `~/.<basename>` (e.g. `vimrc.symlink` → `~/.vimrc`, `vim.symlink` → `~/.vim`). Everything under `.config/` is symlinked into `~/.config/`, and everything under `claude/` is symlinked into `~/.claude/` (Claude Code user-level config). Existing targets are skipped, not overwritten.
 3. On macOS: sources `install/brew.sh`, `install/osx.sh`.
 4. On Linux: installs apt packages (zsh, tmux, vim, build-essential, resilio-sync, etc.), creates `~/.vim-tmp`, installs starship via the official curl script.
 5. Always (both platforms): creates `~/bin`, clones nvm, clones antidote, guarded by existence checks (idempotent); `chsh` to zsh (if not already), appends `source $DOTFILES/zsh/zshrc.bootstrap` to `~/.zshrc` (if not already there), runs `nvm install stable`.
 
 Optional tools live in `extras/` (asdf, crystal, docker, fly, kvm, python, ruby, rust, vscode). Each is a self-contained, idempotent install script. Run `./extras/<tool>` to install one; `extras/README.md` lists what's available. Not called from `install.sh`.
 
-When adding a new dotfile, name it `<name>.symlink` (or put a directory in `.config/`) and `install/link.sh` handles it automatically — no script edits needed.
+When adding a new dotfile, name it `<name>.symlink` (or put a file in `.config/` or `claude/`) and `install/link.sh` handles it automatically — no script edits needed.
 
 ## ZSH configuration architecture
 
