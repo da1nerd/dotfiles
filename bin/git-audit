@@ -107,8 +107,7 @@ done < <(find "$path_abs" -type d \
 while IFS= read -r line; do
   [[ "$line" == *"Permission denied"* ]] || continue
   p="${line#find: }"
-  p="${p% Permission denied}"
-  p="${p%: }"
+  p="${p%: Permission denied}"
   p="${p#\'}"
   p="${p%\'}"
   unreadable+=("$p")
@@ -244,7 +243,6 @@ for repo in "${repos[@]+"${repos[@]}"}"; do
       case "$tag" in
         no-upstream:*) printf '  No upstream: %s\n' "${tag#no-upstream:}" ;;
         no-remote)     printf '  No remote configured\n' ;;
-        error:*)       printf '  Error: %s\n' "${tag#error:}" ;;
       esac
     done
   else
