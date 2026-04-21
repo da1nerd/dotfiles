@@ -75,6 +75,18 @@ fi
 
 path_abs=$(cd "$path" && pwd)
 
+# --- Color setup ---
+#
+# Red tags when stdout is a terminal, plain when piped/redirected.
+
+if [[ -t 1 ]]; then
+  CLR_TAG=$'\033[31m'
+  CLR_RESET=$'\033[0m'
+else
+  CLR_TAG=""
+  CLR_RESET=""
+fi
+
 # --- Discovery ---
 #
 # Walk "$path_abs" and collect every directory containing a ".git" entry
@@ -83,10 +95,25 @@ path_abs=$(cd "$path" && pwd)
 # separately.
 
 repos=()
+unreadable=()
+find_errs=$(mktemp)
 while IFS= read -r -d '' repo; do
   repos+=("$repo")
 done < <(find "$path_abs" -type d \
-  \( -exec sh -c 'test -e "$0/.git"' {} \; -print0 -prune \) 2>/dev/null)
+  \( -exec sh -c 'test -e "$0/.git"' {} \; -print0 -prune \) 2>"$find_errs")
+
+# Parse permission-denied lines. GNU and BSD find both format these as
+# `find: 'path': Permission denied` or `find: path: Permission denied`.
+while IFS= read -r line; do
+  [[ "$line" == *"Permission denied"* ]] || continue
+  p="${line#find: }"
+  p="${p% Permission denied}"
+  p="${p%: }"
+  p="${p#\'}"
+  p="${p%\'}"
+  unreadable+=("$p")
+done < "$find_errs"
+rm -f "$find_errs"
 
 # --- Optional fetch pass ---
 #
@@ -125,13 +152,26 @@ truncate_list() {
 
 for repo in "${repos[@]+"${repos[@]}"}"; do
   tags=()
-  # Per-condition detail, populated in parallel with tags for verbose output.
   detail_modified=()
   detail_untracked=()
   detail_staged=()
   detail_unpushed=""
   detail_upstream=""
   detail_branch=""
+
+  # Probe with a cheap command. If this fails the repo is broken.
+  if ! probe_err=$(git -C "$repo" rev-parse --git-dir 2>&1 >/dev/null); then
+    tags+=("error: $(echo "$probe_err" | head -1)")
+    any_flagged=1
+    rel="${repo#$path_abs/}"
+    [[ "$rel" == "$repo" ]] && rel="."
+    if (( verbose )); then
+      printf '%s\n  Error: %s\n' "$rel" "$(echo "$probe_err" | head -1)"
+    else
+      printf '%s [%s%s%s]\n' "$rel" "$CLR_TAG" "${tags[0]}" "$CLR_RESET"
+    fi
+    continue
+  fi
 
   porc=$(git -C "$repo" status --porcelain 2>/dev/null)
 
@@ -200,19 +240,36 @@ for repo in "${repos[@]+"${repos[@]}"}"; do
       printf '  Unpushed:    %s (%s commits ahead of %s)\n' \
         "$detail_branch" "$detail_unpushed" "$detail_upstream"
     fi
-    # no-upstream / no-remote also deserve verbose lines.
     for tag in "${tags[@]}"; do
       case "$tag" in
         no-upstream:*) printf '  No upstream: %s\n' "${tag#no-upstream:}" ;;
         no-remote)     printf '  No remote configured\n' ;;
+        error:*)       printf '  Error: %s\n' "${tag#error:}" ;;
       esac
     done
   else
     printf '%s' "$rel"
     for tag in "${tags[@]}"; do
-      printf ' [%s]' "$tag"
+      printf ' [%s%s%s]' "$CLR_TAG" "$tag" "$CLR_RESET"
     done
     printf '\n'
+  fi
+done
+
+# --- Unreadable directory report ---
+#
+# Appended after the per-repo loop so permission failures are visible in
+# the same listing. Each unreadable entry contributes to exit 1.
+
+for u in "${unreadable[@]:-}"; do
+  [[ -z "$u" ]] && continue
+  any_flagged=1
+  rel="${u#$path_abs/}"
+  [[ "$rel" == "$u" ]] && rel="$u"
+  if (( verbose )); then
+    printf '%s\n  Unreadable (permission denied)\n' "$rel"
+  else
+    printf '%s [%s%s%s]\n' "$rel" "$CLR_TAG" "unreadable" "$CLR_RESET"
   fi
 done
 
