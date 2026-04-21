@@ -53,7 +53,7 @@ Most scripts branch on `uname` or `$(uname -s)`. When editing cross-platform cod
 
 ## Scripts in `bin/`
 
-`bin/` is prepended to PATH. Notable: `gitme` (clone a github repo into `~/git/`). These are user-facing commands, not build tooling.
+`bin/` is prepended to PATH. Notable: `git-grab` (clone a github repo into `~/git/`; invokable as `git grab user/repo` since git treats `git-*` on PATH as subcommands) and `git-audit` (report repos under `~/git` that have unsynced work). These are user-facing commands, not build tooling.
 
 ## No build / test / lint
 
