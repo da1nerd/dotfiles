@@ -113,6 +113,31 @@ for repo in "${repos[@]+"${repos[@]}"}"; do
     tags+=("untracked")
   fi
 
+  # Branch / remote state.
+  # HEAD is either a branch name (normal), "HEAD" (detached), or empty on
+  # a brand-new repo with no commits. `symbolic-ref --quiet` returns
+  # non-zero for detached HEAD.
+  head_ref=$(git -C "$repo" symbolic-ref --quiet --short HEAD 2>/dev/null || true)
+
+  remotes=$(git -C "$repo" remote 2>/dev/null)
+
+  if [[ -z "$remotes" ]]; then
+    tags+=("no-remote")
+  elif [[ -n "$head_ref" ]]; then
+    # On a branch. Check tracking.
+    upstream=$(git -C "$repo" rev-parse --abbrev-ref --symbolic-full-name \
+                 '@{u}' 2>/dev/null || true)
+    if [[ -z "$upstream" ]]; then
+      tags+=("no-upstream:$head_ref")
+    else
+      ahead=$(git -C "$repo" rev-list --count "$upstream..HEAD" 2>/dev/null || echo 0)
+      if (( ahead > 0 )); then
+        tags+=("unpushed:$ahead")
+      fi
+    fi
+  fi
+  # Detached HEAD (head_ref empty) with a remote: no branch tag added.
+
   (( ${#tags[@]} == 0 )) && continue
   any_flagged=1
 
