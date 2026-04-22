@@ -2,13 +2,10 @@
 # python — Python (latest stable, via asdf)
 set -e
 
-if [ ! -d ~/.asdf ]; then
-    echo "Installing asdf (required for python)"
-    git clone https://github.com/asdf-vm/asdf.git ~/.asdf
-    (cd ~/.asdf && git checkout "$(git describe --abbrev=0 --tags)")
+if ! command -v asdf >/dev/null 2>&1; then
+    echo "asdf is required. Run: extras/asdf"
+    exit 1
 fi
-
-. ~/.asdf/asdf.sh
 
 if ! asdf plugin list 2>/dev/null | grep -qx python; then
     echo "Adding asdf python plugin"

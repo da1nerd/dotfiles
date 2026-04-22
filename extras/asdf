@@ -1,15 +1,42 @@
 #!/usr/bin/env bash
-# asdf — multi-language version manager
+# asdf — multi-language version manager (binary install, v0.16+)
 set -e
 
-if [ -d "~/.asdf" ]; then
-    echo "asdf already installed at ~/.asdf"
+INSTALL_DIR="$HOME/.local/bin"
+ASDF_DATA_DIR="${ASDF_DATA_DIR:-$HOME/.asdf}"
+
+if command -v asdf >/dev/null 2>&1; then
+    echo "asdf already installed: $(asdf version)"
     exit 0
 fi
 
-echo "Installing asdf"
-git clone https://github.com/asdf-vm/asdf.git ~/.asdf
-(cd ~/.asdf && git checkout "$(git describe --abbrev=0 --tags)")
+# Detect OS and arch
+OS=$(uname -s | tr '[:upper:]' '[:lower:]')
+ARCH=$(uname -m)
+case "$ARCH" in
+    x86_64)  ARCH="amd64" ;;
+    aarch64|arm64) ARCH="arm64" ;;
+    i386|i686) ARCH="386" ;;
+    *) echo "Unsupported architecture: $ARCH"; exit 1 ;;
+esac
 
-echo "asdf installed. Already wired into zshrc.bootstrap — open a new"
-echo "shell or 'source ~/.asdf/asdf.sh' to start using it."
+# Fetch latest release tag
+VERSION=$(curl -sf https://api.github.com/repos/asdf-vm/asdf/releases/latest \
+    | grep '"tag_name"' | sed 's/.*"tag_name": *"\(.*\)".*/\1/')
+if [[ -z "$VERSION" ]]; then
+    echo "Failed to fetch latest asdf version"; exit 1
+fi
+
+URL="https://github.com/asdf-vm/asdf/releases/download/${VERSION}/asdf-${VERSION}-${OS}-${ARCH}.tar.gz"
+
+echo "Installing asdf ${VERSION} (${OS}/${ARCH})"
+mkdir -p "$INSTALL_DIR"
+curl -fsSL "$URL" | tar -xz -C "$INSTALL_DIR" asdf
+chmod +x "$INSTALL_DIR/asdf"
+
+# Create data dir so shims path exists on first shell start
+mkdir -p "$ASDF_DATA_DIR/shims"
+
+echo "asdf ${VERSION} installed to ${INSTALL_DIR}/asdf"
+echo "Open a new shell (shims path is wired into zshrc.bootstrap) to start using it."
+echo "Then run: asdf reshim"

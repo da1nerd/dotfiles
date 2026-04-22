@@ -46,15 +46,10 @@ if [[ -s ~/.antidote/antidote.zsh ]]; then
     antidote load $ZSH/.zsh_plugins.txt
 fi
 
-# asdf — extras/asdf git-clones into ~/.asdf on both platforms. Fall back
-# to a brew-managed install only if the self-managed clone isn't present.
-if [[ -s ~/.asdf/asdf.sh ]]; then
-    . ~/.asdf/asdf.sh
-elif command -v brew >/dev/null 2>&1; then
-    _asdf_prefix=$(brew --prefix asdf 2>/dev/null)
-    [[ -s $_asdf_prefix/libexec/asdf.sh ]] && . $_asdf_prefix/libexec/asdf.sh
-    unset _asdf_prefix
-fi
+# asdf — binary install (v0.16+). extras/asdf downloads the binary to
+# ~/.local/bin; shims live in ASDF_DATA_DIR/shims (default ~/.asdf/shims).
+export ASDF_DATA_DIR="${ASDF_DATA_DIR:-$HOME/.asdf}"
+path=("$ASDF_DATA_DIR/shims" $path)
 
 # nvm
 export NVM_DIR="$HOME/.nvm"
