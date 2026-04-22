@@ -2,7 +2,7 @@
 # asdf — multi-language version manager
 set -e
 
-if [ -d ~/.asdf ]; then
+if [ -d "~/.asdf" ]; then
     echo "asdf already installed at ~/.asdf"
     exit 0
 fi
