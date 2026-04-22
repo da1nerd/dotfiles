@@ -17,7 +17,8 @@ usage() {
 Usage: git-audit [--fetch] [-v|--verbose] [-h|--help] [path]
 
 Report git repositories under [path] that are not safely synced:
-uncommitted, staged, untracked, unpushed, no-upstream, or no-remote.
+uncommitted, staged, untracked, unpushed, no-upstream, no-remote, or env-files.
+All local branches are checked for unpushed/no-upstream status.
 
   --fetch        Fetch from all remotes before auditing (parallelized, 8 at a time).
   -v, --verbose  Multi-line per-repo detail instead of compact tags.
@@ -131,6 +132,7 @@ fi
 # The ordering of tags on output follows the order they're appended here.
 
 any_flagged=0
+any_no_upstream=0
 
 # Truncate a comma-joined list to the first 5 entries, append "(+N more)".
 truncate_list() {
@@ -154,9 +156,10 @@ for repo in "${repos[@]+"${repos[@]}"}"; do
   detail_modified=()
   detail_untracked=()
   detail_staged=()
-  detail_unpushed=""
-  detail_upstream=""
-  detail_branch=""
+  no_upstream_branches=()
+  unpushed_info=()
+  env_files=()
+  default_remote=""
 
   # Probe with a cheap command. If this fails the repo is broken.
   if ! probe_err=$(git -C "$repo" rev-parse --git-dir 2>&1 >/dev/null); then
@@ -197,26 +200,44 @@ for repo in "${repos[@]+"${repos[@]}"}"; do
   (( ${#detail_staged[@]} > 0 )) && tags+=("staged")
   (( ${#detail_untracked[@]} > 0 )) && tags+=("untracked")
 
-  head_ref=$(git -C "$repo" symbolic-ref --quiet --short HEAD 2>/dev/null || true)
   remotes=$(git -C "$repo" remote 2>/dev/null)
 
   if [[ -z "$remotes" ]]; then
     tags+=("no-remote")
-  elif [[ -n "$head_ref" ]]; then
-    detail_branch="$head_ref"
-    upstream=$(git -C "$repo" rev-parse --abbrev-ref --symbolic-full-name \
-                 '@{u}' 2>/dev/null || true)
-    if [[ -z "$upstream" ]]; then
-      tags+=("no-upstream:$head_ref")
+  else
+    if grep -q '^origin$' <<< "$remotes"; then
+      default_remote="origin"
     else
-      ahead=$(git -C "$repo" rev-list --count "$upstream..HEAD" 2>/dev/null || echo 0)
-      if (( ahead > 0 )); then
-        tags+=("unpushed:$ahead")
-        detail_unpushed="$ahead"
-        detail_upstream="$upstream"
-      fi
+      default_remote=$(head -1 <<< "$remotes")
     fi
+
+    while IFS= read -r branch; do
+      [[ -z "$branch" ]] && continue
+      upstream=$(git -C "$repo" rev-parse --abbrev-ref --symbolic-full-name \
+                   "${branch}@{u}" 2>/dev/null || true)
+      if [[ -z "$upstream" ]]; then
+        no_upstream_branches+=("$branch")
+      else
+        ahead=$(git -C "$repo" rev-list --count "${upstream}..${branch}" 2>/dev/null || echo 0)
+        if (( ahead > 0 )); then
+          unpushed_info+=("$branch ($ahead commits ahead of $upstream)")
+        fi
+      fi
+    done < <(git -C "$repo" branch --format='%(refname:short)' 2>/dev/null)
+
+    (( ${#no_upstream_branches[@]} > 0 )) && tags+=("no-upstream:${#no_upstream_branches[@]}")
+    (( ${#unpushed_info[@]} > 0 ))        && tags+=("unpushed:${#unpushed_info[@]}")
   fi
+
+  while IFS= read -r -d '' f; do
+    base=$(basename "$f")
+    case "$base" in
+      *.example|*.sample|*.dist|*.template) continue ;;
+    esac
+    env_files+=("${f#$repo/}")
+  done < <(find "$repo" -not -path "*/.git/*" \( -name ".env" -o -name ".env.*" \) -print0 2>/dev/null)
+
+  (( ${#env_files[@]} > 0 )) && tags+=("env-files")
 
   (( ${#tags[@]} == 0 )) && continue
   any_flagged=1
@@ -235,22 +256,28 @@ for repo in "${repos[@]+"${repos[@]}"}"; do
     if (( ${#detail_untracked[@]} > 0 )); then
       printf '  Untracked:   %s\n' "$(truncate_list "${detail_untracked[@]}")"
     fi
-    if [[ -n "$detail_unpushed" ]]; then
-      printf '  Unpushed:    %s (%s commits ahead of %s)\n' \
-        "$detail_branch" "$detail_unpushed" "$detail_upstream"
+    for info in "${unpushed_info[@]+"${unpushed_info[@]}"}"; do
+      printf '  Unpushed:    %s\n' "$info"
+    done
+    if (( ${#no_upstream_branches[@]} > 0 )); then
+      printf '  No upstream: %s\n' "$(truncate_list "${no_upstream_branches[@]}")"
+      any_no_upstream=1
     fi
     for tag in "${tags[@]}"; do
       case "$tag" in
-        no-upstream:*) printf '  No upstream: %s\n' "${tag#no-upstream:}" ;;
-        no-remote)     printf '  No remote configured\n' ;;
+        no-remote) printf '  No remote configured\n' ;;
       esac
     done
+    if (( ${#env_files[@]} > 0 )); then
+      printf '  Env files:   %s\n' "$(truncate_list "${env_files[@]}")"
+    fi
   else
     printf '%s' "$rel"
     for tag in "${tags[@]}"; do
       printf ' [%s%s%s]' "$CLR_TAG" "$tag" "$CLR_RESET"
     done
     printf '\n'
+    (( ${#no_upstream_branches[@]} > 0 )) && any_no_upstream=1
   fi
 done
 
@@ -270,6 +297,8 @@ for u in "${unreadable[@]:-}"; do
     printf '%s [%s%s%s]\n' "$rel" "$CLR_TAG" "unreadable" "$CLR_RESET"
   fi
 done
+
+(( any_no_upstream )) && printf '\nTip: connect the current branch to its remote counterpart:\n  git branch --set-upstream-to=origin/$(git branch --show-current)\n'
 
 (( any_flagged )) && exit 1
 exit 0
